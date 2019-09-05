@@ -1,0 +1,20 @@
+[
+ {
+  "directory": "/home/brandon/Downloads/BDGen16-06-08/11BeDecay", 
+  "arguments": [
+   "g++", 
+   "-c", 
+   "Be_11_Main.c"
+  ], 
+  "file": "Be_11_Main.c"
+ }, 
+ {
+  "directory": "/home/brandon/Downloads/BDGen16-06-08/11BeDecay", 
+  "arguments": [
+   "g++", 
+   "-c", 
+   "Be_11_Functions.c"
+  ], 
+  "file": "Be_11_Functions.c"
+ }
+]
