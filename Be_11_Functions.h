@@ -3,9 +3,7 @@
 #define BE_11_DECAY_BE_11_FUNCTIONS_H
 #include <iostream>
 
-
 using namespace std;
-
 
 struct particle{
 	double p[4]; // 4-momentum vector

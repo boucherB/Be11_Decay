@@ -15,11 +15,12 @@
 
 #include <iostream>
 #include <time.h>
-#include "Be_11_Functions.h"
+#include "Be_11_Functions.h" //this is where the xy struct is
 #include <math.h>
 #include <random>
 #include <stdlib.h>
 #include "dataExtraction.h"
+#include "Be_11_Spline.h"
 
 using namespace std;
 
@@ -51,6 +52,7 @@ int main(){
     string fileEx = "11Be_AlphaDecayFSD.dat";
     vector<xy> exEnergy(251);
     dataExtraction(fileEx, exEnergy);
+    Be_11_Spline(exEnergy);
 
     Q = m_Be_11 - Ex; //The Q value is approximated for beta decays
     electron.maxEnergy = Q - Ex + me; //find the maximum electron energy
@@ -72,4 +74,3 @@ int main(){
 
     return 0;
 }
-
