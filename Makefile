@@ -1,6 +1,8 @@
-OBJECTS = Be_11_Spline.o Be_11_Main.o Be_11_Functions.o dataExtraction.o
+OBJECTS = DecayFunctions.o Be_11_Spline.o Be_11_Main.o Be_11_Functions.o dataExtraction.o
 PREFLAGS = `root-config --cflags`
 POSTFLAGS = -fPIC `root-config --glibs`
+
+all:clean Be_11
 
 Be_11 : $(OBJECTS)
 	g++ $(PREFLAGS) -o Be_11 $(OBJECTS) $(POSTFLAGS)
@@ -16,6 +18,9 @@ dataExtraction.o : dataExtraction.c dataExtraction.h
 
 Be_11_Spline.o : Be_11_Spline.c Be_11_Spline.h
 	g++ $(PREFLAGS) -c Be_11_Spline.c $(POSTFLAGS)
+
+DecayFunctions.o : DecayFunctions.c DecayFunctions.h
+	g++ $(PREFLAGS) -c DecayFunctions.c $(POSTFLAGS)
 
 clean :
 	rm -f $(OBJECTS)

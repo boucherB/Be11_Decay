@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void dataExtraction(string file, vector<xy>& dataVec){
+void dataExtraction(string file, vector<xy>& dataVec, int& maxX, int& maxY, int& minX, int& minY){
 
     fstream data(file);
 
@@ -28,14 +28,47 @@ void dataExtraction(string file, vector<xy>& dataVec){
 
         if(!j){
             dataVec.at(line).x = temp;
+            cout << temp << " ";
             j = 1;
         }else{
             dataVec.at(line).y = temp;
+            cout << temp << endl;
             j = 0;
             ++line;
         }
 
     }
 
+    int maxIndex = 0;
+    for(int i = 0; i < dataVec.size(); ++i){
+      if(dataVec.at(maxIndex).x < dataVec.at(i).x){
+        maxIndex = i;
+      }
+    }
+
+    maxX = maxIndex;
+
+    maxIndex = 0;
+    for(int i = 0; i < dataVec.size(); ++i){
+      if(dataVec.at(maxIndex).y < dataVec.at(i).y){
+        maxIndex = i;
+      }
+    }
+    maxY = maxIndex;
+
+    int minIndex = 0;
+    for(int i = 0; i < dataVec.size(); ++i){
+        if(dataVec.at(minIndex).x > dataVec.at(i).x){
+          maxIndex = i;
+        }
+    }
+    minX = minIndex;
+    minIndex = 0;
+    for(int i = 0; i < dataVec.size(); ++i){
+        if(dataVec.at(minIndex).y > dataVec.at(i).y){
+          maxIndex = i;
+        }
+    }
+    minY = minIndex;
 
 }

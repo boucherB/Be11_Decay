@@ -10,8 +10,6 @@
 #include <string>
 #include <vector>
 
-void dataExtraction(std::string file, std::vector<xy>& dataVec);
+void dataExtraction(std::string file, std::vector<xy>& dataVec, int& maxX, int& maxY, int& minX, int& minY);
 
 #endif //BE_11_DECAY_DATAEXTRACTION_H
-
-
