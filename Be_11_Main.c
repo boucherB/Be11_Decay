@@ -2,15 +2,10 @@
 // Created by brandon on 7/25/19.
 
 /*
-
- * Spline alpha decay
- * Alpha energy and momentum
  * Do we need the delta function
- * Determine momentum using conserv
  *
  the random number for the probabilities is fucked
  ask about mass normalization (electron)
- ask about the negative Q-value
  what is the decay equation used for
  need to fix the momentum magnitude to get the proper fermi value
 gamma
