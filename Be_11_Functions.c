@@ -12,14 +12,14 @@
 
 using namespace std;
 
-double data_Extraction_Value(string file, int numLines){
+double data_Extraction_Value(string file, int numLines, bool B_11_check){
     vector<xy> dataVec(numLines);
     int maxX, maxY, minX, minY;
     dataExtraction(file, dataVec, maxX, maxY, minX, minY);
-    return Be_11_Spline(dataVec, maxX, maxY, minX, minY);
+    return Be_11_Spline(dataVec, maxX, maxY, minX, minY, B_11_check);
 }
 
-void print(double Q, double Ex, particle electron, particle neutrino, particle alpha){
+void print(double Q, double Ex, particle electron, particle neutrino, particle alpha, double decay){
     cout << endl;
     cout << "---------------------" << endl;
     cout << "Excitation Energy: " << Ex << endl;
@@ -30,6 +30,12 @@ void print(double Q, double Ex, particle electron, particle neutrino, particle a
     cout << "Electron Momentum: " << electron.momentumMag << endl;
     cout << "---------------------" << endl;
     cout << "Neutrino Energy: " << neutrino.p[0] << endl;
+    cout << "Neutrino Momentum: " << neutrino.momentumMag << endl;
+    cout << "---------------------" << endl;
+    cout << "Alpha Energy: " << alpha.p[0] << endl;
+    cout << "Alpha Momentum: " << alpha.momentumMag << endl;
+    cout << "---------------------" << endl;
+    cout << "Decay: " << decay << endl;
     cout << endl;
 }
 

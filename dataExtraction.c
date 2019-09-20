@@ -28,11 +28,9 @@ void dataExtraction(string file, vector<xy>& dataVec, int& maxX, int& maxY, int&
 
         if(!j){
             dataVec.at(line).x = temp;
-            cout << temp << " ";
             j = 1;
         }else{
             dataVec.at(line).y = temp;
-            cout << temp << endl;
             j = 0;
             ++line;
         }

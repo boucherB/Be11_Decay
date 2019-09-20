@@ -12,10 +12,9 @@
 
 using namespace std;
 
-double Be_11_Spline(vector<xy> dataVec, int maxX, int maxY, int minX, int minY){
+double Be_11_Spline(vector<xy> dataVec, int maxX, int maxY, int minX, int minY, bool B_11_check){
 
 	vector<double> x, y;
-	cout << dataVec.size() << endl;;
 
 	for(int i = 0; i < dataVec.size(); ++i){
 
@@ -26,33 +25,28 @@ double Be_11_Spline(vector<xy> dataVec, int maxX, int maxY, int minX, int minY){
 
 	TSpline3 dataSpline("dataSpline", &x[0], &y[0], x.size());
 
-
-
-	return randVal(dataVec, dataSpline, maxX, maxY, minX, minY);
+	return randVal(dataVec, dataSpline, maxX, maxY, minX, minY, B_11_check);
 }
 
-double randVal(vector<xy> dataVec, TSpline3 dataSpline, int maxX, int maxY, int minX, int minY){
+double randVal(vector<xy> dataVec, TSpline3 dataSpline, int maxX, int maxY, int minX, int minY, bool B_11_check){
 
 	double randomX = ((double)rand() / RAND_MAX)*(dataVec.at(maxX).x);
-	cout << randomX << " " << dataVec.at(maxX).x << " ";
 	double randomY = ((double)rand() / RAND_MAX)*(dataVec.at(maxY).y);
-	cout << randomY << " " << dataVec.at(maxY).y << endl;
 
 	if((randomX >= dataVec.at(minX).x) && (randomY >= dataVec.at(minY).y)){
-		cout << "check" << endl;
-		if(rejTest(dataSpline, randomX, randomY)){
-			cout << "check2" << endl;
+		if(rejTest(dataSpline, randomX, randomY, B_11_check)){
 			return randomX;
 		}else{
-			randVal(dataVec, dataSpline, maxX, maxY, minX, minY);
+			randVal(dataVec, dataSpline, maxX, maxY, minX, minY, B_11_check);
 		}
 	}else{
-		randVal(dataVec, dataSpline, maxX, maxY, minX, minY);
+		randVal(dataVec, dataSpline, maxX, maxY, minX, minY, B_11_check);
 	}
 }
 //
-bool rejTest(TSpline3 dataSpline, double randomX, double randomY){
-	if((dataSpline.Eval(randomX) <= randomY)){
+bool rejTest(TSpline3 dataSpline, double randomX, double randomY, bool B_11_check){
+
+	if((dataSpline.Eval(randomX) <= randomY) && B_11_check && ((randomX/1000) < 11.021661081)){
 		return true;
 	}else{
 		return false;

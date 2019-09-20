@@ -131,9 +131,10 @@ double fermi(particle e){
 		y.push_back(dataVec.at(i).y);
 
 	}
+
 	TSpline3 dataSpline("dataSpline", &x[0], &y[0], x.size());
 
-    double momentum = 9.75; //random number to get a result
+    double momentum = e.momentumMag; //random number to get a result
     return dataSpline.Eval(momentum);
 }
 
@@ -157,8 +158,14 @@ double decayEquation(particle &e, particle &v, particle &a){
    double term1 = (g1(e.p[0], Jp, J, 1));
    double term2 = g2(e.p[0], Jp, J, 1)*(1 / e.p[0])*dotProduct(e, v);
    double term3 = (1/10)*tau(1, Jp, Jpp)*g12(e.p[0], Jp, J, 1)*tensor2(e, v, a)*dotProduct(e, v) / e.p[0];
+   // cout << "Term 3: " << term3 << endl;
+   // cout << "Tau: " << tau(1, Jp, Jpp) << endl;
+   // cout << "g12: " << g12(e.p[0], Jp, J, 1) << endl;
+   // cout << "tensor2: " << tensor2(e, v, a) << endl;
+   // cout << "dot product: " << dotProduct(e, v) << endl;
 
    //eq 53 on pg 796
    double decay = coefficient*(term1 + term2 + term3);
+
    return decay;
 }

@@ -17,8 +17,8 @@ struct xy{
     double y;
 };
 
-double data_Extraction_Value(std::string file, int numLines);
-void print(double Q, double Ex, particle electron, particle neutrino, particle alpha);
+double data_Extraction_Value(std::string file, int numLines, bool B_11_check);
+void print(double Q, double Ex, particle electron, particle neutrino, particle alpha, double decay);
 void randomizeDirection(particle &e);
 
 #endif

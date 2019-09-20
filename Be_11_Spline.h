@@ -5,8 +5,8 @@
 #include "Be_11_Functions.h"
 #include <TSpline.h>
 
-double Be_11_Spline(std::vector<xy> dataVec, int, int, int, int);
-double randVal(std::vector<xy> dataVec, TSpline3 dataSpline, int, int, int, int);
-bool rejTest(TSpline3 dataSpline, double, double);
+double Be_11_Spline(std::vector<xy> dataVec, int, int, int, int, bool);
+double randVal(std::vector<xy> dataVec, TSpline3 dataSpline, int, int, int, int, bool);
+bool rejTest(TSpline3 dataSpline, double, double, bool);
 
 #endif
