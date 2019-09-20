@@ -58,3 +58,33 @@ void randomizeDirection(particle &e){
         }
     }
 }
+
+void electron_energy(particle &e, double Q){
+    double me = 0.511; //mass of electron
+    e.maxEnergy = (Q + me); //max total electron energy, text pg 275
+    double electron_max_kinetic = e.maxEnergy - me;
+
+    e.p[0] = rand_energy(e, Q, electron_max_kinetic);
+
+}
+
+double rand_energy(particle &e, double Q, double electron_max_kinetic){
+    double rand_kinetic = ((double)rand() / RAND_MAX)*electron_max_kinetic;
+    double rand_N = ((double)rand() / RAND_MAX)*0.05; //randomly chose one to be max
+
+    if(rej_energy(rand_kinetic, rand_N, Q)){
+        return rand_kinetic;
+    }else{
+        rand_energy(e, Q, electron_max_kinetic);
+    }
+}
+
+bool rej_energy(double rand_kinetic, double rand_N, double Q){
+    double N = sqrt(rand_kinetic*rand_kinetic + 2*rand_kinetic)*pow(Q - rand_kinetic, 2)*(rand_kinetic + 0.511);
+
+    if(N >= rand_N){
+        return true;
+    }else{
+        return false;
+    }
+}

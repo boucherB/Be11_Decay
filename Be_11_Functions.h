@@ -20,5 +20,8 @@ struct xy{
 double data_Extraction_Value(std::string file, int numLines, bool B_11_check);
 void print(double Q, double Ex, particle electron, particle neutrino, particle alpha, double decay);
 void randomizeDirection(particle &e);
+void electron_energy(particle &e, double Q);
+double rand_energy(particle &e, double Q, double electron_max_kinetic);
+bool rej_energy(double, double, double);
 
 #endif

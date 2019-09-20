@@ -46,41 +46,41 @@ int main(){
         //extraction of excitation energy
         bool B_11_check = 1;
         string fileEx = "11Be_AlphaDecayFSD.dat";
-        double Ex_B = (data_Extraction_Value(fileEx, 251, B_11_check))/(m_norm*1000);
+        double Ex_B = (data_Extraction_Value(fileEx, 251, B_11_check))/(1000);
         B_11_check = 0;
 
         //Q-value and max energy of electron
-        double Q = ((m_Be_11/m_norm) - Ex_B) / m_norm; //The Q value is approximated for beta decays
+        double Q = m_Be_11 - Ex_B; //The Q value is approximated for beta decays
 
         //electron energy and momentum
-        electron.maxEnergy = (Q + me) / m_norm; //max total electron energy, text pg 275
-        electron.p[0] = (electron.maxEnergy*((double)rand()/RAND_MAX));
-        electron.momentumMag = sqrt(electron.p[0]*electron.p[0]*m_norm*m_norm - me*me);
+        electron_energy(electron, Q);
+        electron.p[0] = electron.p[0] + me;
+        electron.momentumMag = sqrt(electron.p[0]*electron.p[0] - me*me);
 
         //neutrino energy and momentum
-        neutrino.p[0] = ((m_B_11*m_B_11 - me*me - m_Be_11*m_Be_11 + 2*m_Be_11*electron.p[0]) / 2*(electron.p[0]+electron.momentumMag*m_norm));
-        neutrino.momentumMag = neutrino.p[0]*m_norm;
+        neutrino.p[0] = ((m_B_11*m_B_11 - me*me - m_Be_11*m_Be_11 + 2*m_Be_11*electron.p[0]) / 2*(electron.p[0]+electron.momentumMag));
+        neutrino.momentumMag = neutrino.p[0];
 
-        //excitation of Li
+        // //excitation of Li
         double Ex_Li;
         if((double)rand() / RAND_MAX <= 0.921){
-            Ex_Li = 8.6641 / m_norm;
+            Ex_Li = 8.6641;
         }else{
-            Ex_Li = 9.14171 / m_norm;
+            Ex_Li = 9.14171;
         }
 
         //alpha particle
-        alpha.p[0] = abs((m_Li*m_Li - m_B_11*m_B_11 - m_alpha*m_alpha) / (2*m_B_11*m_norm));
-        alpha.momentumMag = sqrt(abs(alpha.p[0]*alpha.p[0]*(m_norm)*(m_norm) - m_alpha*m_alpha));
+        alpha.p[0] = abs((m_Li*m_Li - m_B_11*m_B_11 - m_alpha*m_alpha) / (2*m_B_11));
+        alpha.momentumMag = sqrt(abs(alpha.p[0]*alpha.p[0] - m_alpha*m_alpha));
 
         //direction of the electron and neutrino (completely random)
         randomizeDirection(electron);
         randomizeDirection(neutrino);
         randomizeDirection(alpha);
-
+        //
         double decay = decayEquation(electron, neutrino, alpha);
-        //cout << decay << endl;
-
+        // //cout << decay << endl;
+        //
         //print out the results
         print(Q, Ex_B, electron, neutrino, alpha, decay);
     }
