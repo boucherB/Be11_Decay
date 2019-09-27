@@ -14,43 +14,33 @@ using namespace std;
 
 double Be_11_Spline(vector<xy> dataVec, int maxX, int maxY, int minX, int minY, bool B_11_check){
 
-	vector<double> x, y;
+	vector<double> x, y; //initialize a couple of vectors for the x and y values
 
 	for(int i = 0; i < dataVec.size(); ++i){
 
-		x.push_back(dataVec.at(i).x);
+		x.push_back(dataVec.at(i).x); //inserts all of the values of x and y accordingly
 		y.push_back(dataVec.at(i).y);
 
 	}
 
-	TSpline3 dataSpline("dataSpline", &x[0], &y[0], x.size());
+	TSpline3 dataSpline("dataSpline", &x[0], &y[0], x.size()); //creates the spline function
 
-	return randVal(dataVec, dataSpline, maxX, maxY, minX, minY, B_11_check);
+	return randVal(dataVec, dataSpline, maxX, maxY, minX, minY, B_11_check); //returns the value passing the rejection test
 }
 
 double randVal(vector<xy> dataVec, TSpline3 dataSpline, int maxX, int maxY, int minX, int minY, bool B_11_check){
 
-	double randomX = ((double)rand() / RAND_MAX)*(dataVec.at(maxX).x);
-	double randomY = ((double)rand() / RAND_MAX)*(dataVec.at(maxY).y);
+	double randomX; //initialize the random values
+	double randomY;
 
-	if((randomX >= dataVec.at(minX).x) && (randomY >= dataVec.at(minY).y)){
-		if(rejTest(dataSpline, randomX, randomY, B_11_check)){
-			return randomX;
-		}else{
-			randVal(dataVec, dataSpline, maxX, maxY, minX, minY, B_11_check);
+	while(true){ //loop until rejection test is met
+		randomX = ((double)rand() / RAND_MAX)*(dataVec.at(maxX).x); //randomizes a value from zero to the max
+		randomY = ((double)rand() / RAND_MAX)*(dataVec.at(maxY).y);
+
+		//check if the random Y is within the spline function, check it's the excitation energy of B and if the random X is greater than the minimum
+		if((dataSpline.Eval(randomX) >= randomY) && B_11_check && ((randomX/1000) < 11.021661081) && (randomX >= dataVec.at(minX).x)){
+			return randomX; //if so output the results
 		}
-	}else{
-		randVal(dataVec, dataSpline, maxX, maxY, minX, minY, B_11_check);
 	}
 }
-//
-bool rejTest(TSpline3 dataSpline, double randomX, double randomY, bool B_11_check){
 
-	if((dataSpline.Eval(randomX) <= randomY) && B_11_check && ((randomX/1000) < 11.021661081)){
-		return true;
-	}else{
-		return false;
-	}
-
-
-}

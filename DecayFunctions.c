@@ -120,22 +120,20 @@ double tensor2(particle e, particle v, particle a){
 
 double fermi(particle e){
     vector<double> x,y;
-    vector<xy> dataVec(48);
+    vector<xy> dataVec(48); //set up the vector to store the values
     string fileFermi = "Be_11_Fermi.txt";
-    int maxX, maxY, minX, minY;
-    dataExtraction(fileFermi, dataVec, maxX, maxY, minX, minY);
+    int maxX, maxY, minX, minY; //initialize max and mins for x and y
+    dataExtraction(fileFermi, dataVec, maxX, maxY, minX, minY); //extract the data
 
     for(int i = 0; i < dataVec.size(); ++i){
 
-		x.push_back(dataVec.at(i).x);
+		x.push_back(dataVec.at(i).x); //place the values into vectors
 		y.push_back(dataVec.at(i).y);
 
 	}
 
 	TSpline3 dataSpline("dataSpline", &x[0], &y[0], x.size());
-
-    double momentum = e.momentumMag; //random number to get a result
-    return dataSpline.Eval(momentum);
+    return dataSpline.Eval(e.momentumMag); //return the evaluated fermi value
 }
 
 double decayEquation(particle &e, particle &v, particle &a){
@@ -143,8 +141,6 @@ double decayEquation(particle &e, particle &v, particle &a){
    //extraction of fermi energy
    double fermi_value = fermi(e);
 
-   // //just need the spline function
-   //
    // //initialize all of the constants
    double G_v = 0.0001; //Gv*m_p = 10^-5
    double pi = 3.14;
@@ -158,11 +154,6 @@ double decayEquation(particle &e, particle &v, particle &a){
    double term1 = (g1(e.p[0], Jp, J, 1));
    double term2 = g2(e.p[0], Jp, J, 1)*(1 / e.p[0])*dotProduct(e, v);
    double term3 = (1/10)*tau(1, Jp, Jpp)*g12(e.p[0], Jp, J, 1)*tensor2(e, v, a)*dotProduct(e, v) / e.p[0];
-   // cout << "Term 3: " << term3 << endl;
-   // cout << "Tau: " << tau(1, Jp, Jpp) << endl;
-   // cout << "g12: " << g12(e.p[0], Jp, J, 1) << endl;
-   // cout << "tensor2: " << tensor2(e, v, a) << endl;
-   // cout << "dot product: " << dotProduct(e, v) << endl;
 
    //eq 53 on pg 796
    double decay = coefficient*(term1 + term2 + term3);

@@ -12,16 +12,16 @@ using namespace std;
 
 void dataExtraction(string file, vector<xy>& dataVec, int& maxX, int& maxY, int& minX, int& minY){
 
-    fstream data(file);
+    fstream data(file); //input stream
 
-    if(data.fail()){
+    if(data.fail()){ //checks if it fails
         cout << "Chief we have a problem" << endl;
     }
 
     bool j = 0; //even, odd
     int line = 0; //iterator
 
-    while(!data.eof()){
+    while(!data.eof()){ //while not at the end of the file
 
         double temp; //temp is temporary value
         data >> temp; //extract the data
@@ -37,18 +37,19 @@ void dataExtraction(string file, vector<xy>& dataVec, int& maxX, int& maxY, int&
 
     }
 
+    //checking for the maximum and minimum values for x and y
     int maxIndex = 0;
     for(int i = 0; i < dataVec.size(); ++i){
-      if(dataVec.at(maxIndex).x < dataVec.at(i).x){
+      if(dataVec.at(maxIndex).x < dataVec.at(i).x){ //determining the max of x
         maxIndex = i;
       }
     }
 
-    maxX = maxIndex;
+    maxX = maxIndex; //setting the max index
 
     maxIndex = 0;
     for(int i = 0; i < dataVec.size(); ++i){
-      if(dataVec.at(maxIndex).y < dataVec.at(i).y){
+      if(dataVec.at(maxIndex).y < dataVec.at(i).y){ //max of y
         maxIndex = i;
       }
     }
@@ -56,14 +57,15 @@ void dataExtraction(string file, vector<xy>& dataVec, int& maxX, int& maxY, int&
 
     int minIndex = 0;
     for(int i = 0; i < dataVec.size(); ++i){
-        if(dataVec.at(minIndex).x > dataVec.at(i).x){
+        if(dataVec.at(minIndex).x > dataVec.at(i).x){ //determining the minimum of x
           maxIndex = i;
         }
     }
-    minX = minIndex;
+    minX = minIndex; //setting the minimum of x
+
     minIndex = 0;
     for(int i = 0; i < dataVec.size(); ++i){
-        if(dataVec.at(minIndex).y > dataVec.at(i).y){
+        if(dataVec.at(minIndex).y > dataVec.at(i).y){ //min of y
           maxIndex = i;
         }
     }

@@ -22,6 +22,6 @@ void print(double Q, double Ex, particle electron, particle neutrino, particle a
 void randomizeDirection(particle &e);
 void electron_energy(particle &e, double Q);
 double rand_energy(particle &e, double Q, double electron_max_kinetic);
-bool rej_energy(double, double, double);
+void normalizeEnergy(particle &e, particle &v, particle &a, double);
 
 #endif
