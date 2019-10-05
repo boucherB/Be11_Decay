@@ -42,9 +42,13 @@ void print(double Q, double Ex, particle electron, particle neutrino, particle a
 void randomizeDirection(particle &e){
 
     while(true){
-        e.p[1] = (double)rand() / RAND_MAX; //randomizing the directions
-        e.p[2] = (double)rand() / RAND_MAX;
-        e.p[3] = (double)rand() / RAND_MAX;
+
+        for(int i = 0; i < 3; ++i){
+            e.p[i] = (double)rand() / RAND_MAX;
+            if(((double)rand() / RAND_MAX) >= 0.5){
+                e.p[i] *= -1;
+            }
+        }
 
         double rsq = (e.p[1])*(e.p[1]) + (e.p[2])*(e.p[2]) + (e.p[3])*(e.p[3]); //determining r^2
 
@@ -81,12 +85,12 @@ double rand_energy(particle &e, double Q, double electron_max_kinetic){
         //rand_N = ((double)rand() / RAND_MAX)*0.05; //randomly chose one to be max
         N = sqrt(rand_kinetic*rand_kinetic + 2*rand_kinetic)*pow(Q - rand_kinetic, 2)*(rand_kinetic + 0.511);
 
-        ofstream electronEnergySpectrum("ElectronEnergyOutput.txt", ios_base::app);
-        electronEnergySpectrum << N;
+        ofstream electronEnergySpectrum("Electron_Energy_Spectrum.txt", ios_base::app);
+
         electronEnergySpectrum << rand_kinetic;
         electronEnergySpectrum << endl;
         electronEnergySpectrum.close();
-        cout << N << " " << rand_kinetic << endl;
+
         return rand_kinetic; //if true return the random kinetic energy
     }
 }
@@ -95,4 +99,31 @@ void normalizeEnergy(particle &e, particle &v, particle &a, double m_norm){
     e.p[0] /= m_norm; //normalize the energies by the mass of an electron
     v.p[0] /= m_norm;
     a.p[0] /= m_norm;
+}
+
+void output_text_files(double Ex_B, double Q, double decay, particle e, particle v, particle a){
+    ofstream Ex_Spectrum("Ex_Spectrum.txt", ios_base::app);
+    Ex_Spectrum << Ex_B << endl;
+    Ex_Spectrum.close();
+
+    ofstream Q_Value_Spectrum("Q_Value_Spectrum.txt", ios_base::app);
+    Q_Value_Spectrum << Q << endl;
+    Q_Value_Spectrum.close();
+
+    ofstream Electron_Energy_Spectrum("Electron_Energy_Spectrum.txt", ios_base::app);
+    Electron_Energy_Spectrum << e.p[0] << endl;
+    Electron_Energy_Spectrum.close();
+
+    ofstream Neutrino_Energies("Neutrino_Energy_Spectrum.txt", ios_base::app);
+    Neutrino_Energies << v.p[0] << endl;
+    Neutrino_Energies.close();
+
+    ofstream Alpha_Energy_Spectrum("Alpha_Energy_Spectrum.txt", ios_base::app);
+    Alpha_Energy_Spectrum << a.p[0] << endl;
+    Alpha_Energy_Spectrum.close();
+
+    ofstream Decay_Spectrum("Decay_Spectrum.txt", ios_base::app);
+    Decay_Spectrum << decay << endl;
+    Decay_Spectrum.close();
+
 }

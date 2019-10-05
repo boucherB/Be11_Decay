@@ -23,5 +23,6 @@ void randomizeDirection(particle &e);
 void electron_energy(particle &e, double Q);
 double rand_energy(particle &e, double Q, double electron_max_kinetic);
 void normalizeEnergy(particle &e, particle &v, particle &a, double);
+void output_text_files(double, double, double, particle e, particle v, particle a);
 
 #endif
