@@ -7,5 +7,7 @@
 
 double Be_11_Spline(std::vector<xy> dataVec, int, int, int, int, bool);
 double randVal(std::vector<xy> dataVec, TSpline3 dataSpline, int, int, int, int, bool);
+double random_factor(double, double);
+
 
 #endif

@@ -19,31 +19,13 @@ double data_Extraction_Value(string file, int numLines, bool B_11_check){
     return Be_11_Spline(dataVec, maxX, maxY, minX, minY, B_11_check); //returns the value of the rejection test
 }
 
-void print(double Q, double Ex, particle electron, particle neutrino, particle alpha, double decay){
-    cout << endl;
-    cout << "---------------------" << endl;
-    cout << "Excitation Energy: " << Ex << endl;
-    cout << "Q-value: " << Q << endl;
-    cout << "---------------------" << endl;
-    cout << "Electron Max Energy: " << electron.maxEnergy << endl;
-    cout << "Electron Energy: " << electron.p[0] << endl;
-    cout << "Electron Momentum: " << electron.momentumMag << endl;
-    cout << "---------------------" << endl;
-    cout << "Neutrino Energy: " << neutrino.p[0] << endl;
-    cout << "Neutrino Momentum: " << neutrino.momentumMag << endl;
-    cout << "---------------------" << endl;
-    cout << "Alpha Energy: " << alpha.p[0] << endl;
-    cout << "Alpha Momentum: " << alpha.momentumMag << endl;
-    cout << "---------------------" << endl;
-    cout << "Decay: " << decay << endl;
-    cout << endl;
-}
 
 void randomizeDirection(particle &e){
 
-    while(true){
+    bool boolean = true;
+    while(boolean){
 
-        for(int i = 0; i < 3; ++i){
+        for(int i = 1; i < 4; ++i){
             e.p[i] = (double)rand() / RAND_MAX;
             if(((double)rand() / RAND_MAX) >= 0.5){
                 e.p[i] *= -1;
@@ -58,15 +40,20 @@ void randomizeDirection(particle &e){
             e.p[1] /= r; // if so normalize
             e.p[2] /= r;
             e.p[3] /= r;
-            return;
+            boolean = false;
         }
     }
 }
 
+void set_momentum_values(particle& e){
+    for(int i = 1; i < 4; ++i){
+        e.p[i] *= e.momentumMag;
+    }
+}
+
 void electron_energy(particle &e, double Q){
-    double me = 0.511; //mass of electron
-    e.maxEnergy = (Q + me); //max total electron energy, text pg 275
-    double electron_max_kinetic = e.maxEnergy - me; //electron max kinetic energy
+
+    double electron_max_kinetic = Q; //electron max kinetic energy
 
     e.p[0] = rand_energy(e, Q, electron_max_kinetic); //randomize the electron energy
 

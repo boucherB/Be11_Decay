@@ -11,7 +11,7 @@
 #include "Be_11_Functions.h"
 
 using namespace std;
-
+int j = 0;
 double Be_11_Spline(vector<xy> dataVec, int maxX, int maxY, int minX, int minY, bool B_11_check){
 
 	vector<double> x, y; //initialize a couple of vectors for the x and y values
@@ -34,12 +34,18 @@ double randVal(vector<xy> dataVec, TSpline3 dataSpline, int maxX, int maxY, int 
 	double randomY;
 
 	while(true){ //loop until rejection test is met
-		randomX = ((double)rand() / RAND_MAX)*(dataVec.at(maxX).x); //randomizes a value from zero to the max
-		randomY = ((double)rand() / RAND_MAX)*(dataVec.at(maxY).y);
+
+		randomX = random_factor(dataVec.at(maxX).x, dataVec.at(minX).x); //randomizes a value from minimum to the max
+		randomY = random_factor(dataVec.at(maxY).y, 0);
 
 		//check if the random Y is within the spline function, check it's the excitation energy of B and if the random X is greater than the minimum
-		if((dataSpline.Eval(randomX) >= randomY) && B_11_check && ((randomX/1000) < 11.021661081*931.49432) && (randomX >= dataVec.at(minX).x)){
+		if((dataSpline.Eval(randomX) >= randomY) && B_11_check){
 			return randomX; //if so output the results
 		}
 	}
+}
+
+double random_factor(double max, double min){
+	double f = (double)rand() / RAND_MAX;
+	return f*(max - min) + min;
 }

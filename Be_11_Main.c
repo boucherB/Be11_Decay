@@ -31,8 +31,10 @@ using namespace std;
 int main(){
 
     srand(time(0)); //sets randomization
+    int j = 0;
 
-    for(int i = 0; i < 10000000; ++i){
+    for(int i = 0; i < 10000; ++i){
+
         //this is all within the rest frame of the beta decay daughter
         double m_norm = 0.511, me = m_norm, m_B_11 = 11.009305166,
         m_Be_11 = 11.021661081, m_alpha = 4.00260325413, m_Li = 7.01600343666;
@@ -47,6 +49,13 @@ int main(){
         particle electron; //initialize an electron with 4-vector momentum, momentum magnitude and max energy
         particle neutrino;
         particle alpha;
+        normalizeEnergy(electron, neutrino, alpha, m_norm);
+
+
+        //direction of the electron and neutrino (completely random)
+        randomizeDirection(electron);
+        randomizeDirection(neutrino);
+        randomizeDirection(alpha);
 
         //extraction of excitation energy
         bool B_11_check = 1; //checks if this is for the exciation energy of Boron
@@ -55,18 +64,19 @@ int main(){
         m_B_11 += Ex_B;
         B_11_check = 0;
 
-
         //Q-value and max energy of electron
-        double Q = m_Be_11 - m_B_11; //Set the resulting Q-value
+        double Q = m_Be_11 - m_B_11 - me; //Set the resulting Q-value
 
         //electron energy and momentum
         electron_energy(electron, Q); //determines the max kinetic energy
-        electron.p[0] += me; //total energy
+        electron.p[0] += me; //total energy, text pg 275
         electron.momentumMag = sqrt(electron.p[0]*electron.p[0] - me*me); //momentum magnitude for the momentum
+        set_momentum_values(electron);
 
         //neutrino energy and momentum
-        neutrino.p[0] = ((m_B_11*m_B_11 - me*me - m_Be_11*m_Be_11 + 2*m_Be_11*electron.p[0]) / 2*(electron.p[0]+electron.momentumMag));
+        neutrino.p[0] = ((m_B_11*m_B_11 - me*me - m_Be_11*m_Be_11 + 2*m_Be_11*electron.p[0]) / (2*(electron.p[0] - dotProduct(electron, neutrino) - m_Be_11)));
         neutrino.momentumMag = neutrino.p[0]; //neutrino is assumed to be massless
+        //set_momentum_values(neutrino);
 
         // //excitation of Li
         double Ex_Li;
@@ -82,10 +92,14 @@ int main(){
         alpha.p[0] = (-m_Li*m_Li + m_B_11*m_B_11 + m_alpha*m_alpha) / (2*m_B_11);
         alpha.momentumMag = sqrt(alpha.p[0]*alpha.p[0] - m_alpha*m_alpha);
 
-        //direction of the electron and neutrino (completely random)
-        randomizeDirection(electron);
-        randomizeDirection(neutrino);
-        randomizeDirection(alpha);
+        // cout << "Excitation Energy: " << Ex_B << endl;
+        // cout << "Mass difference:   " << m_Be_11*m_Be_11 - m_B_11*m_B_11 << endl;
+        // cout << "Denominator:       " << 2*(electron.p[0] - dotProduct(electron, neutrino) - m_Be_11) << endl;
+        // cout << "Q value:           " << Q << endl;
+        // cout << "Electron Energy:   " << electron.p[0] << endl;
+        // cout << "Dot Product:       " << dotProduct(electron,neutrino) << endl;;
+        // cout << "Neutrino Energy:   " << neutrino.p[0] << endl;
+        // cout << endl;
 
         //normalize all of the values by the electron mass
         normalizeEnergy(electron, neutrino, alpha, m_norm);
@@ -95,22 +109,7 @@ int main(){
         //create the text files with raw data
         output_text_files(Ex_B, Q, decay, electron, neutrino, alpha);
 
-        //print out the results
-        //print(Q, Ex_B, electron, neutrino, alpha, decay);
     }
-
-    // double temp;
-    // fstream data_values("Q_Value_Spectrum.txt");
-    // data_values.close();
-    // TH1D histo("histo", "Q Values", 3000, 0, 3);
-    // cout << data_values.Size() << endl;
-    // while(data_values.eof()){
-    //     cout << "temp" << endl;
-    //     histo.Fill(temp);
-    // }
-    // TCanvas c1("c1", "c1");
-    // c1.cd();
-    // histo.Draw();
 
     return 0;
 }
