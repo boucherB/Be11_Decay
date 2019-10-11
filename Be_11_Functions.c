@@ -63,14 +63,12 @@ double rand_energy(particle &e, double Q, double electron_max_kinetic){
 
     //this all stems from eq 9.25 on pg280
     double rand_kinetic; //initialize the random values
-    double rand_N;
-    double N;
 
     while(true){
 
         rand_kinetic = ((double)rand() / RAND_MAX)*electron_max_kinetic; //randomize the kinetic from the max to zero
         //rand_N = ((double)rand() / RAND_MAX)*0.05; //randomly chose one to be max
-        N = sqrt(rand_kinetic*rand_kinetic + 2*rand_kinetic)*pow(Q - rand_kinetic, 2)*(rand_kinetic + 0.511);
+        //N = sqrt(rand_kinetic*rand_kinetic + 2*rand_kinetic)*pow(Q - rand_kinetic, 2)*(rand_kinetic + 0.511);
 
         ofstream electronEnergySpectrum("Electron_Energy_Spectrum.txt", ios_base::app);
 
@@ -88,7 +86,7 @@ void normalizeEnergy(particle &e, particle &v, particle &a, double m_norm){
     a.p[0] /= m_norm;
 }
 
-void output_text_files(double Ex_B, double Q, double decay, particle e, particle v, particle a){
+void output_text_files(double Ex_B, double Q, particle e, particle v, particle a){
     ofstream Ex_Spectrum("Ex_Spectrum.txt", ios_base::app);
     Ex_Spectrum << Ex_B << endl;
     Ex_Spectrum.close();
@@ -109,8 +107,8 @@ void output_text_files(double Ex_B, double Q, double decay, particle e, particle
     Alpha_Energy_Spectrum << a.p[0] << endl;
     Alpha_Energy_Spectrum.close();
 
-    ofstream Decay_Spectrum("Decay_Spectrum.txt", ios_base::app);
-    Decay_Spectrum << decay << endl;
-    Decay_Spectrum.close();
+    // ofstream Decay_Spectrum("Decay_Spectrum.txt", ios_base::app);
+    // Decay_Spectrum << decay << endl;
+    // Decay_Spectrum.close();
 
 }

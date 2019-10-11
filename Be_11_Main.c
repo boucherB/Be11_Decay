@@ -65,7 +65,7 @@ int main(){
         B_11_check = 0;
 
         //Q-value and max energy of electron
-        double Q = m_Be_11 - m_B_11 - me; //Set the resulting Q-value
+        double Q = m_Be_11 - m_B_11; //Set the resulting Q-value
 
         //electron energy and momentum
         electron_energy(electron, Q); //determines the max kinetic energy
@@ -76,7 +76,12 @@ int main(){
         //neutrino energy and momentum
         neutrino.p[0] = ((m_B_11*m_B_11 - me*me - m_Be_11*m_Be_11 + 2*m_Be_11*electron.p[0]) / (2*(electron.p[0] - dotProduct(electron, neutrino) - m_Be_11)));
         neutrino.momentumMag = neutrino.p[0]; //neutrino is assumed to be massless
-        //set_momentum_values(neutrino);
+        //set_moment    // cout << "Mass of 11B:       " << m_B_11 << endl;
+        // cout << "Mass of 11Be:      " << m_Be_11 << endl;
+        // cout << "Excitation Energy: " << Ex_B << endl;
+        // cout << "Q value:           " << Q << endl;
+        // cout << "Electron Energy:   " << electron.p[0] << endl;
+        // cout << "Neutrino Energy:   " << neutrino.p[0] << endl;um_values(neutrino);
 
         // //excitation of Li
         double Ex_Li;
@@ -92,23 +97,23 @@ int main(){
         alpha.p[0] = (-m_Li*m_Li + m_B_11*m_B_11 + m_alpha*m_alpha) / (2*m_B_11);
         alpha.momentumMag = sqrt(alpha.p[0]*alpha.p[0] - m_alpha*m_alpha);
 
-        if(Q < 0){
-            cout << "Mass of 11B:       " << m_B_11 << endl;
-            cout << "Mass of 11Be:      " << m_Be_11 << endl;
-            cout << "Excitation Energy: " << Ex_B << endl;
-            cout << "Q value:           " << Q << endl;
-            cout << "Electron Energy:   " << electron.p[0] << endl;
-            cout << "Neutrino Energy:   " << neutrino.p[0] << endl;
-            cout << endl;
-        }
+
+        // cout << "Mass of 11B:       " << m_B_11 << endl;
+        // cout << "Mass of 11Be:      " << m_Be_11 << endl;
+        // cout << "Excitation Energy: " << Ex_B << endl;
+        // cout << "Q value:           " << Q << endl;
+        // cout << "Electron Energy:   " << electron.p[0] << endl;
+        // cout << "Neutrino Energy:   " << neutrino.p[0] << endl;
+
 
         //normalize all of the values by the electron mass
         normalizeEnergy(electron, neutrino, alpha, m_norm);
 
-        double decay = decayEquation(electron, neutrino, alpha);
-
+        // double decay = decayEquation(electron, neutrino, alpha);
+        // cout << "Decay:             " << decay << endl;
+        // cout << endl;
         //create the text files with raw data
-        output_text_files(Ex_B, Q, decay, electron, neutrino, alpha);
+        output_text_files(Ex_B, Q, electron, neutrino, alpha);
 
     }
 

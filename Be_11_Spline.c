@@ -37,10 +37,9 @@ double randVal(vector<xy> dataVec, TSpline3 dataSpline, int maxX, int maxY, int 
 
 		randomX = random_factor(dataVec.at(maxX).x, dataVec.at(minX).x); //randomizes a value from minimum to the max
 		randomY = random_factor(dataVec.at(maxY).y, 0);
-		double Q = (11.021661081 - 11.009305166)*(931.49432) - (randomX/1000) -0.511;
 
 		//check if the random Y is within the spline function, check it's the excitation energy of B and if the random X is greater than the minimum
-		if((dataSpline.Eval(randomX) >= randomY) && B_11_check && Q > 0){
+		if((dataSpline.Eval(randomX) >= randomY) && B_11_check){
 			return randomX; //if so output the results
 		}
 	}
