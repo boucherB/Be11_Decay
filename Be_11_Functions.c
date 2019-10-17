@@ -70,12 +70,6 @@ double rand_energy(particle &e, double Q, double electron_max_kinetic){
         //rand_N = ((double)rand() / RAND_MAX)*0.05; //randomly chose one to be max
         //N = sqrt(rand_kinetic*rand_kinetic + 2*rand_kinetic)*pow(Q - rand_kinetic, 2)*(rand_kinetic + 0.511);
 
-        ofstream electronEnergySpectrum("Electron_Energy_Spectrum.txt", ios_base::app);
-
-        electronEnergySpectrum << rand_kinetic;
-        electronEnergySpectrum << endl;
-        electronEnergySpectrum.close();
-
         return rand_kinetic; //if true return the random kinetic energy
     }
 }

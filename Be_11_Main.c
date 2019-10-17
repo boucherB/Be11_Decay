@@ -74,7 +74,8 @@ int main(){
         set_momentum_values(electron);
 
         //neutrino energy and momentum
-        neutrino.p[0] = ((m_B_11*m_B_11 - me*me - m_Be_11*m_Be_11 + 2*m_Be_11*electron.p[0]) / (2*(electron.p[0] - dotProduct(electron, neutrino) - m_Be_11)));
+        double m_B_11_ion = m_B_11 - me;
+        neutrino.p[0] = ((m_B_11_ion*m_B_11_ion - me*me - m_Be_11*m_Be_11 + 2*m_Be_11*electron.p[0]) / (2*(electron.p[0] - dotProduct(electron, neutrino) - m_Be_11)));
         neutrino.momentumMag = neutrino.p[0]; //neutrino is assumed to be massless
         //set_moment    // cout << "Mass of 11B:       " << m_B_11 << endl;
         // cout << "Mass of 11Be:      " << m_Be_11 << endl;
@@ -105,7 +106,7 @@ int main(){
         // cout << "Electron Energy:   " << electron.p[0] << endl;
         // cout << "Neutrino Energy:   " << neutrino.p[0] << endl;
 
-
+        output_text_files(Ex_B, Q, electron, neutrino, alpha);
         //normalize all of the values by the electron mass
         normalizeEnergy(electron, neutrino, alpha, m_norm);
 
@@ -113,7 +114,7 @@ int main(){
         // cout << "Decay:             " << decay << endl;
         // cout << endl;
         //create the text files with raw data
-        output_text_files(Ex_B, Q, electron, neutrino, alpha);
+
 
     }
 
