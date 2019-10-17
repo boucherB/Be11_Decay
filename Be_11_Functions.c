@@ -51,29 +51,6 @@ void set_momentum_values(particle& e){
     }
 }
 
-void electron_energy(particle &e, double Q){
-
-    double electron_max_kinetic = Q; //electron max kinetic energy
-
-    e.p[0] = rand_energy(e, Q, electron_max_kinetic); //randomize the electron energy
-
-}
-
-double rand_energy(particle &e, double Q, double electron_max_kinetic){
-
-    //this all stems from eq 9.25 on pg280
-    double rand_kinetic; //initialize the random values
-
-    while(true){
-
-        rand_kinetic = ((double)rand() / RAND_MAX)*electron_max_kinetic; //randomize the kinetic from the max to zero
-        //rand_N = ((double)rand() / RAND_MAX)*0.05; //randomly chose one to be max
-        //N = sqrt(rand_kinetic*rand_kinetic + 2*rand_kinetic)*pow(Q - rand_kinetic, 2)*(rand_kinetic + 0.511);
-
-        return rand_kinetic; //if true return the random kinetic energy
-    }
-}
-
 void normalizeEnergy(particle &e, particle &v, particle &a, double m_norm){
     e.p[0] /= m_norm; //normalize the energies by the mass of an electron
     v.p[0] /= m_norm;
