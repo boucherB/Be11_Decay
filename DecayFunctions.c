@@ -142,21 +142,17 @@ double decayEquation(particle &e, particle &v, particle &a){
    double fermi_value = fermi(e);
 
    // //initialize all of the constants
-   double G_v = 0.0001; //Gv*m_p = 10^-5
    double pi = 3.14;
-   double theta_c = 15; //degrees
-   double J = 1/2; //J = 1/2+
-   double Jp = 3/2; //J' = 3/2+
-   double Jpp = 1/2; //pretend I know what this is to get result
+   double J = 1./2.; //J = 1/2+
+   double Jp = 3./2.; //J' = 3/2+
+   double Jpp = 1./2.; //pretend I know what this is to get result
 
-   double coefficient = fermi_value*((G_v)*(G_v)*cos(theta_c)*cos(theta_c) / (2*pow((2*pi),6)));
+   double coefficient = fermi_value*(e.maxEnergy - e.p[0])^(2);
    // for the g's, g_i(E) = F_i(E, J', J, 1)
    double term1 = (g1(e.p[0], Jp, J, 1));
    double term2 = g2(e.p[0], Jp, J, 1)*(1 / e.p[0])*dotProduct(e, v);
-   double term3 = (1/10)*tau(1, Jp, Jpp)*g12(e.p[0], Jp, J, 1)*tensor2(e, v, a)*dotProduct(e, v) / e.p[0];
+   double term3 = (1./10.)*tau(1, Jp, Jpp)*g12(e.p[0], Jp, J, 1)*tensor2(e, v, a) / e.p[0];
 
    //eq 53 on pg 796
-   double decay = coefficient*(term1 + term2 + term3);
-
-   return decay;
+   return coefficient*(term1 + term2 + term3);
 }
