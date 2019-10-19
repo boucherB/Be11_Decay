@@ -120,7 +120,7 @@ double tensor2(particle e, particle v, particle a){
 
 double fermi(particle e){
     vector<double> x,y;
-    vector<xy> dataVec(48); //set up the vector to store the values
+    vector<xy> dataVec(49); //set up the vector to store the values
     string fileFermi = "Be_11_Fermi.txt";
     int maxX, maxY, minX, minY; //initialize max and mins for x and y
     dataExtraction(fileFermi, dataVec, maxX, maxY, minX, minY); //extract the data
@@ -136,18 +136,13 @@ double fermi(particle e){
     return dataSpline.Eval(e.momentumMag); //return the evaluated fermi value
 }
 
-double decayEquation(particle &e, particle &v, particle &a){
+double decayEquation(particle &e, particle &v, particle &a, double J, double Jp, double Jpp){
 
    //extraction of fermi energy
    double fermi_value = fermi(e);
 
    // //initialize all of the constants
-   double pi = 3.14;
-   double J = 1./2.; //J = 1/2+
-   double Jp = 3./2.; //J' = 3/2+
-   double Jpp = 1./2.; //pretend I know what this is to get result
-
-   double coefficient = fermi_value*(e.maxEnergy - e.p[0])^(2);
+   double coefficient = fermi_value*(e.maxEnergy - e.p[0])*(e.maxEnergy - e.p[0])*(e.p[0])*(e.momentumMag);
    // for the g's, g_i(E) = F_i(E, J', J, 1)
    double term1 = (g1(e.p[0], Jp, J, 1));
    double term2 = g2(e.p[0], Jp, J, 1)*(1 / e.p[0])*dotProduct(e, v);

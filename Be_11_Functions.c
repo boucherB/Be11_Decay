@@ -77,9 +77,10 @@ void output_text_files(double Ex_B, double Q, particle e, particle v, particle a
     ofstream Alpha_Energy_Spectrum("Alpha_Energy_Spectrum.txt", ios_base::app);
     Alpha_Energy_Spectrum << a.p[0] << endl;
     Alpha_Energy_Spectrum.close();
+}
 
-    // ofstream Decay_Spectrum("Decay_Spectrum.txt", ios_base::app);
-    // Decay_Spectrum << decay << endl;
-    // Decay_Spectrum.close();
-
+void output_decay_file(double decay){
+    ofstream Decay_Spectrum("Decay_Spectrum.txt", ios_base::app);
+    Decay_Spectrum << decay << endl;
+    Decay_Spectrum.close();
 }
