@@ -45,11 +45,17 @@ int main(){
         particle e; //electron
         particle v; //neutrino
         particle a; //alpha
+        particle Li; //Lithium
+        particle B; //Boron
 
         //direction of the electron and neutrino (completely random)
         randomizeDirection(e);
         randomizeDirection(v);
         randomizeDirection(a);
+
+        for(int i = 1; i < 4; ++i){
+            Li.p[i] = -1*a.p[i]; //momentum is equal and opposite of Li
+        }
 
         //extraction of excitation energy
         bool B_11_check = 1; //checks if this is for the exciation energy of Boron
@@ -72,6 +78,10 @@ int main(){
         v.momentumMag = v.p[0]; //neutrino is assumed to be massless
         set_momentum_values(v);
 
+        for(int i = 1; i < 4; ++i){
+            B.p[i] = -(e.p[i] + v.p[i]); //determining the momentum of the recoil
+        }
+
         //excitation of Li
         double Ex_Li;
         double excited_level = 9.142; //need to make sure the decay to excited is energetically possible
@@ -89,12 +99,18 @@ int main(){
         }
         m_Li += Ex_Li; //mass of lithium plus its excitation energy
 
+        //solving for the velocity of 11B
+        //need Galilean transformation
+        //double v_center = (e.p[0] + n.p[0]) / (me + m_B_11_ion);
+
         //alpha particle
-        double Q_alpha = m_B_11 - m_Li - m_alpha; //alpha Q value
-        //should I be using the m_B_11_ion
-        a.p[0] = (Q_alpha) / (1 + (m_alpha/m_Li)); //equation 8.6 in textbook (pg 248)
+        //double Q_alpha = m_B_11 - m_Li - m_alpha; //alpha Q value
+        //a.p[0] = (Q_alpha) / (1 + (m_alpha/m_Li)); //equation 8.6 in textbook (pg 248)
+        a.p[0] = ((m_alpha*m_alpha + m_B_11_ion*m_B_11_ion - m_Li*m_Li)*sqrt(m_B_11_ion*m_B_11_ion + B.p[1]*B.p[1] + B.p[2]*B.p[2] + B.p[3]*B.p[3])
+        + sqrt(dotProduct(a, B)*dotProduct(a, B)*(pow(m_alpha, 4.0) + pow((m_B_11_ion*m_B_11_ion + m_Li*m_Li), 2) - 2*m_alpha*m_alpha*(m_B_11_ion*m_B_11_ion
+        + m_Li*m_Li - 2*(dotProduct(a, B)*dotProduct(a, B) - (B.p[1]*B.p[1] + B.p[2]*B.p[2] +B.p[3]*B.p[3])))))) / (2*(m_B_11_ion*m_B_11_ion) - (dotProduct(a, B)*dotProduct(a, B) - (B.p[1]*B.p[1] + B.p[2]*B.p[2] +B.p[3]*B.p[3])));
+        a.p[0] -= m_alpha;
         a.momentumMag = sqrt(a.p[0]*a.p[0] - m_alpha*m_alpha);
-        //cout << a.p[0] << endl;
 
         //create the text files with raw data
         output_text_files(Ex_B, Q, e, v, a);

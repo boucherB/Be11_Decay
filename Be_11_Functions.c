@@ -84,3 +84,9 @@ void output_decay_file(double decay){
     Decay_Spectrum << decay << endl;
     Decay_Spectrum.close();
 }
+
+void galilean_transformation(particle& e, particle &n, particle& a, double v_center){
+
+
+
+}
