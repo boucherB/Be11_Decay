@@ -53,10 +53,6 @@ int main(){
         randomizeDirection(v);
         randomizeDirection(a);
 
-        for(int i = 1; i < 4; ++i){
-            Li.p[i] = -1*a.p[i]; //momentum is equal and opposite of Li
-        }
-
         //extraction of excitation energy
         bool B_11_check = 1; //checks if this is for the exciation energy of Boron
         string fileEx = "11Be_AlphaDecayFSD.dat"; //keV
@@ -78,6 +74,7 @@ int main(){
         v.momentumMag = v.p[0]; //neutrino is assumed to be massless
         set_momentum_values(v);
 
+        //the momentum of B = -(momentum of e + momentum of v)
         for(int i = 1; i < 4; ++i){
             B.p[i] = -(e.p[i] + v.p[i]); //determining the momentum of the recoil
         }
@@ -99,18 +96,22 @@ int main(){
         }
         m_Li += Ex_Li; //mass of lithium plus its excitation energy
 
-        //solving for the velocity of 11B
-        //need Galilean transformation
-        //double v_center = (e.p[0] + n.p[0]) / (me + m_B_11_ion);
-
         //alpha particle
-        //double Q_alpha = m_B_11 - m_Li - m_alpha; //alpha Q value
-        //a.p[0] = (Q_alpha) / (1 + (m_alpha/m_Li)); //equation 8.6 in textbook (pg 248)
-        a.p[0] = ((m_alpha*m_alpha + m_B_11_ion*m_B_11_ion - m_Li*m_Li)*sqrt(m_B_11_ion*m_B_11_ion + B.p[1]*B.p[1] + B.p[2]*B.p[2] + B.p[3]*B.p[3])
-        + sqrt(dotProduct(a, B)*dotProduct(a, B)*(pow(m_alpha, 4.0) + pow((m_B_11_ion*m_B_11_ion + m_Li*m_Li), 2) - 2*m_alpha*m_alpha*(m_B_11_ion*m_B_11_ion
-        + m_Li*m_Li - 2*(dotProduct(a, B)*dotProduct(a, B) - (B.p[1]*B.p[1] + B.p[2]*B.p[2] +B.p[3]*B.p[3])))))) / (2*(m_B_11_ion*m_B_11_ion) - (dotProduct(a, B)*dotProduct(a, B) - (B.p[1]*B.p[1] + B.p[2]*B.p[2] +B.p[3]*B.p[3])));
-        a.p[0] -= m_alpha;
-        a.momentumMag = sqrt(a.p[0]*a.p[0] - m_alpha*m_alpha);
+        double Q_alpha = m_B_11 - m_Li - m_alpha; //alpha Q value, MeV
+        a.p[0] = (Q_alpha) / (1 + (m_alpha/m_Li)) + m_alpha; //equation 8.6 in textbook (pg 248), alpha kinetic energy
+        a.momentumMag = sqrt(a.p[0]*a.p[0] - m_alpha*m_alpha); //all within the lab frame
+
+
+        //Galilean transformation with the velocity of the recoil
+        B.momentumMag = sqrt(B.p[1]*B.p[1] + B.p[2]*B.p[2] + B.p[3]*B.p[3]); //solving for the momentum magnitude
+        a.momentumMag += m_alpha*B.momentumMag / m_B_11_ion;
+        a.p[0] = sqrt(a.momentumMag*a.momentumMag + m_alpha*m_alpha) - m_alpha;
+
+
+        //the momentum of Li is equal and opposite to the alpha particle
+        for(int i = 1; i < 4; ++i){
+            Li.p[i] = -1*a.p[i];
+        }
 
         //create the text files with raw data
         output_text_files(Ex_B, Q, e, v, a);
