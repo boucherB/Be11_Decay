@@ -106,20 +106,24 @@ int main(){
 
         //Galilean transformation with the velocity of the recoil
         for(int i = 1; i < 4; ++i){
-            a.p[i] += (m_alpha*B.p[i] / m_B_11_ion);
+            Li.p[i] = -1*a.p[i] + ((m_Li*B.p[i])/m_B_11_ion);
         }
-        a.momentumMag = sqrt(a.p[1]*a.p[1] + a.p[2]*a.p[2] + a.p[3]*a.p[3]);
-        a.p[0] = sqrt(a.momentumMag*a.momentumMag + m_alpha*m_alpha) - m_alpha;
 
         //the momentum of Li is equal and opposite to the alpha particle
+        Li.momentumMag = sqrt(Li.p[1]*Li.p[1] + Li.p[2]*Li.p[2] + Li.p[3]*Li.p[3]);
+
+        //transformation for the alpha particle
         for(int i = 1; i < 4; ++i){
-            Li.p[i] = -1*a.p[i];
+            a.p[i] += (m_alpha*B.p[i] / m_B_11_ion);
         }
+
+        a.momentumMag = sqrt(a.p[1]*a.p[1] + a.p[2]*a.p[2] + a.p[3]*a.p[3]);
+        a.p[0] = sqrt(a.momentumMag*a.momentumMag + m_alpha*m_alpha) - m_alpha;
 
         //create the text files with raw data
         output_text_files(Ex_B, Q, e, v, a);
 
-        //normalize all of t0000he values by the electron mass
+        //normalize all of the values by the electron mass
         normalizeEnergy(e, v, a, m_norm);
 
         //decay equation
