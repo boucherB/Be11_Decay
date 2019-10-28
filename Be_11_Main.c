@@ -26,7 +26,7 @@ int main(){
 
     srand(time(0)); //sets randomization
 
-    for(int i = 0; i < 1000000; ++i){
+    for(int i = 0; i < 1000000000; ++i){
 
         //this is all within the rest frame of the beta decay daughter
         double m_norm = 0.511, me = m_norm, m_B_11 = 11.009305166,
@@ -97,16 +97,19 @@ int main(){
         m_Li += Ex_Li; //mass of lithium plus its excitation energy
 
         //alpha particle
-        double Q_alpha = m_B_11 - m_Li - m_alpha; //alpha Q value, MeV
+        m_Li -= me;
+        double Q_alpha = m_B_11_ion - m_Li - m_alpha; //alpha Q value, MeV
         a.p[0] = (Q_alpha) / (1 + (m_alpha/m_Li)) + m_alpha; //equation 8.6 in textbook (pg 248), alpha kinetic energy
         a.momentumMag = sqrt(a.p[0]*a.p[0] - m_alpha*m_alpha); //all within the lab frame
+        set_momentum_values(a);
 
 
         //Galilean transformation with the velocity of the recoil
-        B.momentumMag = sqrt(B.p[1]*B.p[1] + B.p[2]*B.p[2] + B.p[3]*B.p[3]); //solving for the momentum magnitude
-        a.momentumMag += m_alpha*B.momentumMag / m_B_11_ion;
+        for(int i = 1; i < 4; ++i){
+            a.p[i] += (m_alpha*B.p[i] / m_B_11_ion);
+        }
+        a.momentumMag = sqrt(a.p[1]*a.p[1] + a.p[2]*a.p[2] + a.p[3]*a.p[3]);
         a.p[0] = sqrt(a.momentumMag*a.momentumMag + m_alpha*m_alpha) - m_alpha;
-
 
         //the momentum of Li is equal and opposite to the alpha particle
         for(int i = 1; i < 4; ++i){
@@ -116,7 +119,7 @@ int main(){
         //create the text files with raw data
         output_text_files(Ex_B, Q, e, v, a);
 
-        //normalize all of the values by the electron mass
+        //normalize all of t0000he values by the electron mass
         normalizeEnergy(e, v, a, m_norm);
 
         //decay equation
