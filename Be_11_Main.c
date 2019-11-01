@@ -28,7 +28,7 @@ int main(){
 
     for(int i = 0; i < 1000000000; ++i){
 
-        //this is all within the rest frame of the beta decay daughter
+        //initializing all of the masses and setting the spins
         double m_norm = 0.511, me = m_norm, m_B_11 = 11.009305166,
         m_Be_11 = 11.021661081, m_alpha = 4.00260325413, m_Li = 7.01600343666; //from AMDC
         double mass_conversion = 931.49432; //Mev
@@ -41,7 +41,7 @@ int main(){
         m_Li *= mass_conversion;
 
         //setting up the particles
-        //initialize an electron with 4-vector momentum, momentum magnitude and max energy
+        //initialize particles with 4-vector momentum, momentum magnitude and max energy
         particle e; //electron
         particle v; //neutrino
         particle a; //alpha
@@ -57,9 +57,9 @@ int main(){
         bool B_11_check = 1; //checks if this is for the exciation energy of Boron
         string fileEx = "11Be_AlphaDecayFSD.dat"; //keV
         double Ex_B = (data_Extraction_Value(fileEx, 251, B_11_check) / (1000)); //determines the excitation energy (MeV)
-        m_B_11 += Ex_B;
+        m_B_11 += Ex_B; //add the excitation energy to the ground state mass
 
-        //Q-value and max energy of electron
+        //Q-value
         double Q = m_Be_11 - m_B_11; //Set the resulting Q-value
 
         //electron energy and momentum
@@ -97,9 +97,9 @@ int main(){
         m_Li += Ex_Li; //mass of lithium plus its excitation energy
 
         //alpha particle
-        m_Li -= me;
+        m_Li -= me; //subtract off an electron from the Lithium mass
         double Q_alpha = m_B_11_ion - m_Li - m_alpha; //alpha Q value, MeV
-        a.p[0] = (Q_alpha) / (1 + (m_alpha/m_Li)) + m_alpha; //equation 8.6 in textbook (pg 248), alpha kinetic energy
+        a.p[0] = (Q_alpha) / (1 + (m_alpha/m_Li)) + m_alpha; //equation 8.6 in textbook (pg 248), alpha total energy
         a.momentumMag = sqrt(a.p[0]*a.p[0] - m_alpha*m_alpha); //all within the lab frame
         set_momentum_values(a);
 
@@ -111,14 +111,17 @@ int main(){
 
         //the momentum of Li is equal and opposite to the alpha particle
         Li.momentumMag = sqrt(Li.p[1]*Li.p[1] + Li.p[2]*Li.p[2] + Li.p[3]*Li.p[3]);
+        set_momentum_values(Li);
 
         //transformation for the alpha particle
         for(int i = 1; i < 4; ++i){
             a.p[i] += (m_alpha*B.p[i] / m_B_11_ion);
         }
 
+        //setting the alpha momentum in the Be rest fram
         a.momentumMag = sqrt(a.p[1]*a.p[1] + a.p[2]*a.p[2] + a.p[3]*a.p[3]);
         a.p[0] = sqrt(a.momentumMag*a.momentumMag + m_alpha*m_alpha) - m_alpha;
+        set_momentum_values(a);
 
         //create the text files with raw data
         output_text_files(Ex_B, Q, e, v, a);
