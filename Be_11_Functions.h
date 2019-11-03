@@ -24,6 +24,5 @@ void randomizeDirection(particle &e);
 void normalizeEnergy(particle &e, particle &v, particle &a, double);
 void output_text_files(double, double, particle e, particle v, particle a);
 void output_decay_file(double decay);
-void galilean_transformation(particle& e, particle &n, particle& a, double v_center);
 
 #endif

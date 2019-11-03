@@ -9,6 +9,7 @@ using namespace std;
 
 //internal functions
 double dotProduct(particle e, particle v);
+double normalized_dotProduct(particle e, particle v);
 
 double decayEquation(particle &e, particle &v, particle &a, double J, double Jp, double Jpp); //the final decay Equation
 double fermi(particle e);

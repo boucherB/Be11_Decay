@@ -26,13 +26,13 @@ int main(){
 
     srand(time(0)); //sets randomization
 
-    for(int i = 0; i < 1000000000; ++i){
+    for(int i = 0; i < 1000000; ++i){
 
         //initializing all of the masses and setting the spins
         double m_norm = 0.511, me = m_norm, m_B_11 = 11.009305166,
         m_Be_11 = 11.021661081, m_alpha = 4.00260325413, m_Li = 7.01600343666; //from AMDC
         double mass_conversion = 931.49432; //Mev
-        double J = 1/2, Jp = 3/2, Jpp; //spins
+        double J = 1./2., Jp = 3./2., Jpp; //spins
 
         //convert the masses to MeV
         m_B_11 *= mass_conversion;
@@ -131,6 +131,7 @@ int main(){
 
         //decay equation
         double decay = decayEquation(e, v, a, J, Jp, Jpp);
+        //cout << decay << endl;
 
         //create output text files for decay
         output_decay_file(decay);
