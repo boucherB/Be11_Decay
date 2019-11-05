@@ -103,7 +103,6 @@ int main(){
         a.momentumMag = sqrt(a.p[0]*a.p[0] - m_alpha*m_alpha); //all within the lab frame
         set_momentum_values(a);
 
-
         //Galilean transformation with the velocity of the recoil
         for(int i = 1; i < 4; ++i){
             Li.p[i] = -1*a.p[i] + ((m_Li*B.p[i])/m_B_11_ion);
@@ -121,7 +120,6 @@ int main(){
         //setting the alpha momentum in the Be rest fram
         a.momentumMag = sqrt(a.p[1]*a.p[1] + a.p[2]*a.p[2] + a.p[3]*a.p[3]);
         a.p[0] = sqrt(a.momentumMag*a.momentumMag + m_alpha*m_alpha) - m_alpha;
-        set_momentum_values(a);
 
         //create the text files with raw data
         output_text_files(Ex_B, Q, e, v, a);

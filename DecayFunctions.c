@@ -15,8 +15,8 @@ using namespace std;
 //The entire lot of functions come from Equation 53
 double tau(double L, double Jp, double Jpp){
 
-    double tau1coeff = 2 / (Jp*(Jp + 1));
-    double tau2coeff = 10 / (7*Jp*(Jp + 1));
+    double tau1coeff = 2. / (Jp*(Jp + 1));
+    double tau2coeff = 10. / (7*Jp*(Jp + 1));
 
     if(L == 1){
         if(Jp == Jpp + 1){
@@ -88,16 +88,15 @@ double g2(double E, double v, double u, double s){
 	double a1 = 0;
 	double c1 = 1; //the beta decay is GT because of the spin sequence
 
-	return pow(abs(a1), 2) - pow(abs(c1), 2)/3;
+	return pow(abs(a1), 2); //- pow(abs(c1), 2)/3; don't think we should have this term
 }
 
 double g12(double E, double v, double u, double s){
 
 	double a1 = 0;
     double c1 = 1; //the beta decay is GT because of the spin sequence
-	double theta_uv = theta(u,v);
 
-	return -theta_uv*pow(abs(c1),2);
+	return -theta(u,v)*pow(abs(c1),2);
 }
 
 
@@ -115,6 +114,7 @@ double dotProduct(particle e, particle v){
 }
 
 double normalized_dotProduct(particle e, particle v){
+
     return (e.p[1]*v.p[1] + e.p[2]*v.p[2] + e.p[3]*v.p[3]) / (e.momentumMag*v.momentumMag);
 }
 
@@ -147,11 +147,18 @@ double decayEquation(particle &e, particle &v, particle &a, double J, double Jp,
 
    // //initialize all of the constants
    double coefficient = fermi_value*(e.maxEnergy - e.p[0])*(e.maxEnergy - e.p[0])*(e.p[0])*(e.momentumMag);
+   //cout << coefficient << endl;
    // for the g's, g_i(E) = F_i(E, J', J, 1)
    double term1 = (g1(e.p[0], Jp, J, 1));
+   //cout << term1 << endl;
    double term2 = g2(e.p[0], Jp, J, 1)*(e.momentumMag / e.p[0])*normalized_dotProduct(e, v);
+   //cout << term2 << endl;
    double term3 = (1./10.)*tau(1, Jp, Jpp)*g12(e.p[0], Jp, J, 1)*tensor2(e, v, a);
-
+   // cout << tau(1, Jp, Jpp) << endl;
+   // cout << g12(e.p[0], Jp, J, 1) << endl;
+   // cout << tensor2(e, v, a) << endl;
+   // cout << term3 << endl;
+   // cout << endl;
    //eq 53 on pg 796
    return coefficient*(term1 + term2 + term3);
 }
