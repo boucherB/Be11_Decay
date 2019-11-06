@@ -19,8 +19,7 @@ work on the readme
 #include "TH1D.h"
 #include "TCanvas.h"
 #include <TROOT.h>
-#include "catch2.h"
-#define CATCH_CONFIG_MAIN
+
 
 using namespace std;
 
@@ -69,10 +68,6 @@ int main(){
         e.p[0] = electron_kinetic + me; //total energy, text pg 275
         e.momentumMag = sqrt(e.p[0]*e.p[0] - me*me); //momentum magnitude for the momentum
         set_momentum_values(e);
-
-        TEST_CASE("Electron energy is ", "[electron_energy]"){
-            REQUIRE( Q == 0 );
-        }
 
         //neutrino energy and momentum
         double m_B_11_ion = m_B_11 - me;

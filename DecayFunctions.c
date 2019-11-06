@@ -75,7 +75,7 @@ double theta(double u, double v){
 }
 
 //within g1, g2 and g12, c1 is one as it is entirely GT, change in L = 1
-double g1(double E, double v, double u, double s){
+double g1(double E, double u, double v, double s){
 
 	double a1 = 0;
 	double c1 = 1; //the beta decay is GT because of the spin sequence
@@ -83,15 +83,15 @@ double g1(double E, double v, double u, double s){
 	return pow(abs(a1),2)+pow(abs(c1),2);
 }
 
-double g2(double E, double v, double u, double s){
+double g2(double E, double u, double v, double s){
 
 	double a1 = 0;
 	double c1 = 1; //the beta decay is GT because of the spin sequence
 
-	return pow(abs(a1), 2); //- pow(abs(c1), 2)/3; don't think we should have this term
+	return pow(abs(a1), 2) - 1./3.*c1*c1;
 }
 
-double g12(double E, double v, double u, double s){
+double g12(double E, double u, double v, double s){
 
 	double a1 = 0;
     double c1 = 1; //the beta decay is GT because of the spin sequence

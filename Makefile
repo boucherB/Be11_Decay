@@ -25,3 +25,11 @@ DecayFunctions.o : DecayFunctions.c DecayFunctions.h
 clean :
 	rm -f $(OBJECTS)
 	rm -f Electron_Energy_Spectrum.txt Q_Value_Spectrum.txt Ex_Spectrum.txt Neutrino_Energies.txt Neutrino_Energy_Spectrum.txt Alpha_Energy_Spectrum.txt Decay_Spectrum.txt
+
+
+test.o : test.cpp
+	g++ -std=c++11 $(PREFLAGS) -c test.cpp
+
+test: DecayFunctions.o Be_11_Spline.o Be_11_Functions.o dataExtraction.o test.o
+
+	g++ $(PREFLAGS) -I./ $^ $(POSTFLAGS) -o $@

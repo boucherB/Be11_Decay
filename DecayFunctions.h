@@ -17,9 +17,9 @@ double fermi(particle e);
 //internal functions for decay equation
 double theta(double u, double v); //theta function
 double delta1(double E, double v_star, double X); //delta functions
-double g1(double E, double v, double u, double s); //g-functions
-double g2(double E, double v, double u, double s);
-double g12(double E, double v, double u, double s);
+double g1(double E, double u, double v, double s); //g-functions
+double g2(double E, double u, double v, double s);
+double g12(double E, double u, double v, double s);
 double tau(double L, double Jp, double Jpp); //tau functions
 double omega(double L, double Jp, double Jpp); //omega functions
 double tensor2(particle e, particle v, particle a); //tensor
