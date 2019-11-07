@@ -27,7 +27,7 @@ int main(){
 
     srand(time(0)); //sets randomization
 
-    for(int i = 0; i < 1; ++i){
+    for(int i = 0; i < 1000000; ++i){
 
         //initializing all of the masses and setting the spins
         double m_norm = 0.511, me = m_norm, m_B_11 = 11.009305166,
@@ -122,18 +122,28 @@ int main(){
         a.momentumMag = sqrt(a.p[1]*a.p[1] + a.p[2]*a.p[2] + a.p[3]*a.p[3]);
         a.p[0] = sqrt(a.momentumMag*a.momentumMag + m_alpha*m_alpha) - m_alpha;
 
-        //create the text files with raw data
-        output_text_files(Ex_B, Q, e, v, a);
-
         //normalize all of the values by the electron mass
         normalizeEnergy(e, v, a, m_norm);
 
         //decay equation
         double decay = decayEquation(e, v, a, J, Jp, Jpp);
-        //cout << decay << endl;
 
-        //create output text files for decay
-        output_decay_file(decay);
+        //setting the max decay value
+        double decay_max = 1000.;
+
+        //rejection test for the decays
+        if(((double)rand() / RAND_MAX)*decay_max <= decay){
+
+            //unnormalize the inputs to the decay function
+            unnormalizeEnergy(e, v, a, m_norm);
+
+            //create the text files with raw data
+            output_text_files(Ex_B, Q, e, v, a);
+
+            //cout << decay << endl;
+            //create output text files for decay
+            output_decay_file(decay);
+        }
 
     }
     return 0;

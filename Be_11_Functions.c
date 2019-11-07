@@ -71,6 +71,26 @@ void normalizeEnergy(particle &e, particle &v, particle &a, double m_norm){
     a.maxEnergy /= m_norm;
 }
 
+void unnormalizeEnergy(particle &e, particle &v, particle &a, double m_norm){
+    e.p[0] *= m_norm; //normalize the energies by the mass of an electron
+    v.p[0] *= m_norm;
+    a.p[0] *= m_norm;
+
+    for(int i = 1; i < 4; ++i){
+        e.p[i] *= m_norm;
+        v.p[i] *= m_norm;
+        a.p[i] *= m_norm;
+    }
+
+    e.momentumMag *= m_norm;
+    v.momentumMag *= m_norm;
+    a.momentumMag *= m_norm;
+
+    e.maxEnergy *= m_norm;
+    v.maxEnergy *= m_norm;
+    a.maxEnergy *= m_norm;
+}
+
 void output_text_files(double Ex_B, double Q, particle e, particle v, particle a){
     ofstream Ex_Spectrum("Ex_Spectrum.txt", ios_base::app);
     Ex_Spectrum << Ex_B << endl;
