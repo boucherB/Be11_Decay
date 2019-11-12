@@ -62,6 +62,7 @@ int main(){
 
         //Q-value
         double Q = m_Be_11 - m_B_11; //Set the resulting Q-value
+        e.maxEnergy = Q + m_norm;
 
         //electron energy and momentum
         double electron_kinetic = ((double)rand() / RAND_MAX)*Q; //determines the max kinetic energy
@@ -88,7 +89,7 @@ int main(){
                 Ex_Li = 0; //ground state energy
                 Jpp = 3./2.;
             }else{
-                Ex_Li = 0.47761; //excited state
+                Ex_Li = 0.47761; //exci((double)rand() / RAND_MAX)*decay_maxted state
                 Jpp = 1./2.;
             }
         }else{
@@ -112,6 +113,7 @@ int main(){
         //the momentum of Li is equal and opposite to the alpha particle
         Li.momentumMag = sqrt(Li.p[1]*Li.p[1] + Li.p[2]*Li.p[2] + Li.p[3]*Li.p[3]);
         set_momentum_values(Li);
+        Li.p[0] = sqrt(Li.momentumMag*Li.momentumMag + m_Li*m_Li) - m_Li;
 
         //transformation for the alpha particle
         for(int i = 1; i < 4; ++i){
@@ -120,31 +122,54 @@ int main(){
 
         //setting the alpha momentum in the Be rest fram
         a.momentumMag = sqrt(a.p[1]*a.p[1] + a.p[2]*a.p[2] + a.p[3]*a.p[3]);
-        a.p[0] = sqrt(a.momentumMag*a.momentumMag + m_alpha*m_alpha) - m_alpha;
+        a.p[0] = sqrt(a.momentumMag*a.momentumMag + m_alpha*m_alpha) - m_alpha; //kinetic energy
 
         //normalize all of the values by the electron mass
         normalizeEnergy(e, v, a, m_norm);
 
+        double term2, term3;
+
         //decay equation
-        double decay = decayEquation(e, v, a, J, Jp, Jpp);
+        double decay = decayEquation(e, v, a, J, Jp, Jpp, term2, term3);
 
         //setting the max decay value
-        double decay_max = 1000.;
-
-        //rejection test for the decays
-        if(((double)rand() / RAND_MAX)*decay_max <= decay){
-
+        double decay_max = 125.;
+        //random decay
+        double rand_decay = ((double)rand() / RAND_MAX)*decay_max;
+        //rejection test for the decays2.36755
+        if(rand_decay <= decay){
             //unnormalize the inputs to the decay function
             unnormalizeEnergy(e, v, a, m_norm);
 
             //create the text files with raw data
             output_text_files(Ex_B, Q, e, v, a);
 
-            //cout << decay << endl;
             //create output text files for decay
             output_decay_file(decay);
+
+            ofstream total_kinetic("total_kinetic.txt", ios_base::app);
+            total_kinetic << a.p[0] + Li.p[0] + (e.p[0] - m_norm) + v.p[0] << endl;
+            total_kinetic.close();
+
         }
 
     }
     return 0;
 }
+
+
+// ofstream alpha_Li("Alpha_Lithium.txt", ios_base::app);
+// alpha_Li << a.p[0] + Li.p[0] << endl;
+// alpha_Li.close();
+
+// ofstream Normalized_Dot_Product("Normalized_Dot_Product.txt", ios_base::app);
+// Normalized_Dot_Product << normalized_dotProduct(e,v) << endl;
+// Normalized_Dot_Product.close();
+
+// ofstream Term_2("Term_2.txt", ios_base::app);
+// Term_2 << term2 << endl;
+// Term_2.close();
+
+// ofstream total_kinetic("total_kinetic.txt", ios_base::app);
+// total_kinetic << a.p[0] + Li.p[0] + (e.p[0] - m_norm) + v.p[0] << endl;
+// total_kinetic.close();
