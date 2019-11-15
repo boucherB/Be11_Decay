@@ -13,6 +13,7 @@ work on the readme
 #include <stdlib.h>
 #include <cstdlib>
 #include <fstream>
+#include <iomanip>
 #include "dataExtraction.h"
 #include "Be_11_Spline.h"
 #include "DecayFunctions.h"
@@ -27,10 +28,10 @@ int main(){
 
     srand(time(0)); //sets randomization
 
-    for(int i = 0; i < 1000000; ++i){
+    for(int i = 0; i < 100000000; ++i){
 
         //initializing all of the masses and setting the spins
-        double m_norm = 0.511, me = m_norm, m_B_11 = 11.009305166,
+        double m_norm = 0.5109989461, me = m_norm, m_B_11 = 11.009305166,
         m_Be_11 = 11.021661081, m_alpha = 4.00260325413, m_Li = 7.01600343666; //from AMDC
         double mass_conversion = 931.49432; //Mev
         double J = 1./2., Jp = 3./2., Jpp; //spins
@@ -148,8 +149,12 @@ int main(){
             output_decay_file(decay);
 
             ofstream total_kinetic("total_kinetic.txt", ios_base::app);
-            total_kinetic << a.p[0] + Li.p[0] + (e.p[0] - m_norm) + v.p[0] << endl;
+            total_kinetic << setprecision(9) << a.p[0] + Li.p[0] + (e.p[0] - m_norm) + v.p[0] << endl;
             total_kinetic.close();
+
+            ofstream alpha_Li("Alpha_Lithium.txt", ios_base::app);
+            alpha_Li << setprecision(9) << a.p[0] + Li.p[0] << endl;
+            alpha_Li.close();
 
         }
 
