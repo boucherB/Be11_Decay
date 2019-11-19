@@ -59,8 +59,8 @@ int main(){
 
         //extraction of excitation energy
         bool B_11_check = 1; //checks if this is for the exciation energy of Boron
-        string fileEx = "11Be_AlphaDecayFSD.dat"; //keV
-        double Ex_B = (data_Extraction_Value(fileEx, 251, B_11_check) / (1000)); //determines the excitation energy (MeV)
+        string fileEx = "11Be_AlphaDecayFSD_2.dat"; //keV
+        double Ex_B = (data_Extraction_Value(fileEx, 285, B_11_check) / (1000)); //determines the excitation energy (MeV)
         m_B_11 += Ex_B; //add the excitation energy to the ground state mass
 
         //Q-value
