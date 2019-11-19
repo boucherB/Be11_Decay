@@ -139,7 +139,7 @@ double fermi(particle e){
     return dataSpline.Eval(e.momentumMag); //return the evaluated fermi value
 }
 
-double decayEquation(particle &e, particle &v, particle &a, double J, double Jp, double Jpp, double& term2, double& term3){
+double decayEquation(particle &e, particle &v, particle &a, double J, double Jp, double Jpp){
 
    //extraction of fermi energy
    double fermi_value = fermi(e);
@@ -147,8 +147,8 @@ double decayEquation(particle &e, particle &v, particle &a, double J, double Jp,
    //setting up the terms
    double coefficient = fermi_value*(e.maxEnergy - e.p[0])*(e.maxEnergy - e.p[0])*(e.p[0])*(e.momentumMag);
    double term1 = (g1(e.p[0], Jp, J, 1));
-   term2 = g2(e.p[0], Jp, J, 1)*(e.momentumMag / e.p[0])*normalized_dotProduct(e, v);
-   term3 = (1./10.)*tau(1, Jp, Jpp)*g12(e.p[0], Jp, J, 1)*tensor2(e, v, a);
+   double term2 = g2(e.p[0], Jp, J, 1)*(e.momentumMag / e.p[0])*normalized_dotProduct(e, v);
+   double term3 = (1./10.)*tau(1, Jp, Jpp)*g12(e.p[0], Jp, J, 1)*tensor2(e, v, a);
 
    //eq 53 on pg 796
    return coefficient*(term1 + term2 + term3);

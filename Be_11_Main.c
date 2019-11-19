@@ -28,12 +28,12 @@ int main(){
 
     srand(time(0)); //sets randomization
 
-    for(int i = 0; i < 100000000; ++i){
+    for(int i = 0; i < 1000000; ++i){
 
         //initializing all of the masses and setting the spins
         double m_norm = 0.5109989461, me = m_norm, m_B_11 = 11.009305166,
         m_Be_11 = 11.021661081, m_alpha = 4.00260325413, m_Li = 7.01600343666; //from AMDC
-        double mass_conversion = 931.49432; //Mev
+        double mass_conversion = 931.49410242; //Mev
         double J = 1./2., Jp = 3./2., Jpp; //spins
 
         //convert the masses to MeV
@@ -49,11 +49,13 @@ int main(){
         particle a; //alpha
         particle Li; //Lithium
         particle B; //Boron
+        particle Gamma;
 
         //direction of the electron and neutrino (completely random)
         randomizeDirection(e);
         randomizeDirection(v);
         randomizeDirection(a);
+        randomizeDirection(Gamma);
 
         //extraction of excitation energy
         bool B_11_check = 1; //checks if this is for the exciation energy of Boron
@@ -101,9 +103,9 @@ int main(){
 
         //alpha particle
         m_Li -= me; //subtract off an electron from the Lithium mass
-        double Q_alpha = m_B_11_ion - m_Li - m_alpha; //alpha Q value, MeV
-        a.p[0] = (Q_alpha) / (1 + (m_alpha/m_Li)) + m_alpha; //equation 8.6 in textbook (pg 248), alpha total energy
-        a.momentumMag = sqrt(a.p[0]*a.p[0] - m_alpha*m_alpha); //all within the lab frame
+        a.p[0] = (m_B_11_ion*m_B_11_ion + m_alpha*m_alpha - m_Li*m_Li) / (2*m_B_11_ion);
+	    Li.p[0] =  -(m_B_11_ion*m_B_11_ion + m_alpha*m_alpha - m_Li*m_Li) / (2*m_B_11_ion);
+	    a.momentumMag = sqrt(a.p[0]*a.p[0] - m_alpha*m_alpha); //all within the lab frame
         set_momentum_values(a);
 
         //Galilean transformation with the velocity of the recoil
@@ -128,18 +130,19 @@ int main(){
         //normalize all of the values by the electron mass
         normalizeEnergy(e, v, a, m_norm);
 
-        double term2, term3;
-
         //decay equation
-        double decay = decayEquation(e, v, a, J, Jp, Jpp, term2, term3);
+        double decay = decayEquation(e, v, a, J, Jp, Jpp);
 
         //setting the max decay value
         double decay_max = 125.;
-        //random decay
+
+       	//random decay
         double rand_decay = ((double)rand() / RAND_MAX)*decay_max;
-        //rejection test for the decays2.36755
+
+       	//rejection test for the decays2.36755
         if(rand_decay <= decay){
-            //unnormalize the inputs to the decay function
+
+	        //unnormalize the inputs to the decay function
             unnormalizeEnergy(e, v, a, m_norm);
 
             //create the text files with raw data
@@ -147,14 +150,6 @@ int main(){
 
             //create output text files for decay
             output_decay_file(decay);
-
-            ofstream total_kinetic("total_kinetic.txt", ios_base::app);
-            total_kinetic << setprecision(9) << a.p[0] + Li.p[0] + (e.p[0] - m_norm) + v.p[0] << endl;
-            total_kinetic.close();
-
-            ofstream alpha_Li("Alpha_Lithium.txt", ios_base::app);
-            alpha_Li << setprecision(9) << a.p[0] + Li.p[0] << endl;
-            alpha_Li.close();
 
         }
 
