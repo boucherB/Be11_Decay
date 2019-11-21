@@ -28,7 +28,7 @@ int main(){
 
     srand(time(0)); //sets randomization
 
-    for(int i = 0; i < 1000000; ++i){
+    for(int i = 0; i < 100; ++i){
 
         //initializing all of the masses and setting the spins
         double m_norm = 0.5109989461, me = m_norm, m_B_11 = 11.009305166,
@@ -49,13 +49,11 @@ int main(){
         particle a; //alpha
         particle Li; //Lithium
         particle B; //Boron
-        particle Gamma;
 
         //direction of the electron and neutrino (completely random)
         randomizeDirection(e);
         randomizeDirection(v);
         randomizeDirection(a);
-        randomizeDirection(Gamma);
 
         //extraction of excitation energy
         bool B_11_check = 1; //checks if this is for the exciation energy of Boron
@@ -87,6 +85,7 @@ int main(){
         //excitation of Li
         double Ex_Li;
         double excited_level = 9.142; //need to make sure the decay to excited is energetically possible
+        bool is_lithium_excited = false;
         if(Ex_B >= excited_level){
             if((double)rand() / RAND_MAX <= 0.921){
                 Ex_Li = 0; //ground state energy
@@ -94,6 +93,7 @@ int main(){
             }else{
                 Ex_Li = 0.47761; //exci((double)rand() / RAND_MAX)*decay_maxted state
                 Jpp = 1./2.;
+                is_lithium_excited = true;
             }
         }else{
             Ex_Li = 0; //ground state energy
@@ -105,6 +105,13 @@ int main(){
         m_Li -= me; //subtract off an electron from the Lithium mass
         a.p[0] = (m_B_11_ion*m_B_11_ion + m_alpha*m_alpha - m_Li*m_Li) / (2*m_B_11_ion);
 	    Li.p[0] =  -(m_B_11_ion*m_B_11_ion + m_alpha*m_alpha - m_Li*m_Li) / (2*m_B_11_ion);
+
+        //recoil energy, gamma
+        if(is_lithium_excited){
+            double recoil = (m_Li*m_Li + (m_Li - Ex_Li)*(m_Li - Ex_Li))/(2*m_Li); //total energy of Li in rest frame of excited Li
+        }
+
+
 	    a.momentumMag = sqrt(a.p[0]*a.p[0] - m_alpha*m_alpha); //all within the lab frame
         set_momentum_values(a);
 
@@ -115,8 +122,9 @@ int main(){
 
         //the momentum of Li is equal and opposite to the alpha particle
         Li.momentumMag = sqrt(Li.p[1]*Li.p[1] + Li.p[2]*Li.p[2] + Li.p[3]*Li.p[3]);
-        set_momentum_values(Li);
+        //set_momentum_values(Li);
         Li.p[0] = sqrt(Li.momentumMag*Li.momentumMag + m_Li*m_Li) - m_Li;
+
 
         //transformation for the alpha particle
         for(int i = 1; i < 4; ++i){
