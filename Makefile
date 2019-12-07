@@ -25,7 +25,7 @@ DecayFunctions.o : DecayFunctions.c DecayFunctions.h
 clean :
 	rm -f $(OBJECTS)
 	rm -f Electron_Energy_Spectrum.txt Q_Value_Spectrum.txt Ex_Spectrum.txt Neutrino_Energies.txt Neutrino_Energy_Spectrum.txt Alpha_Energy_Spectrum.txt Decay_Spectrum.txt
-	rm -f Normalized_Dot_Product.txt Term_2.txt Alpha_Lithium.txt total_kinetic.txt
+	rm -f Normalized_Dot_Product.txt Term_2.txt Alpha_Lithium.txt total_kinetic.txt Final_Output.txt Gaussian.txt
 
 test.o : test.cpp
 	g++ -std=c++11 $(PREFLAGS) -c test.cpp

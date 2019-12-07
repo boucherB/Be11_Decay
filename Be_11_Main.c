@@ -28,7 +28,9 @@ int main(){
 
     srand(time(0)); //sets randomization
 
-    for(int i = 0; i < 100; ++i){
+    int counter = 0; //counter used for the final output file
+
+    for(int i = 0; i < 1000000; ++i){ //9900000 events
 
         //initializing all of the masses and setting the spins
         double m_norm = 0.5109989461, me = m_norm, m_B_11 = 11.009305166,
@@ -42,18 +44,22 @@ int main(){
         m_alpha *= mass_conversion;
         m_Li *= mass_conversion;
 
-        //setting up the particles
-        //initialize particles with 4-vector momentum, momentum magnitude and max energy
+        //initialize all the particles
         particle e; //electron
         particle v; //neutrino
         particle a; //alpha
         particle Li; //Lithium
         particle B; //Boron
+        particle Gamma; //Gamma
 
-        //direction of the electron and neutrino (completely random)
+        //randomize the directions
         randomizeDirection(e);
         randomizeDirection(v);
         randomizeDirection(a);
+        randomizeDirection(Gamma);
+
+        //randomize the position using Gaussian distribution
+        randomizePosition(e, a, Li, Gamma);
 
         //extraction of excitation energy
         bool B_11_check = 1; //checks if this is for the exciation energy of Boron
@@ -66,8 +72,8 @@ int main(){
         e.maxEnergy = Q + m_norm;
 
         //electron energy and momentum
-        double electron_kinetic = ((double)rand() / RAND_MAX)*Q; //determines the max kinetic energy
-        e.p[0] = electron_kinetic + me; //total energy, text pg 275
+        e.kinetic_energy = ((double)rand() / RAND_MAX)*Q; //determines the max kinetic energy
+        e.p[0] = e.kinetic_energy + me; //total energy, text pg 275
         e.momentumMag = sqrt(e.p[0]*e.p[0] - me*me); //momentum magnitude for the momentum
         set_momentum_values(e);
 
@@ -85,15 +91,17 @@ int main(){
         //excitation of Li
         double Ex_Li;
         double excited_level = 9.142; //need to make sure the decay to excited is energetically possible
-        bool is_lithium_excited = false;
+        //bool is_lithium_excited = false; //used this to verify the recoil of Li was small enough to ignore
         if(Ex_B >= excited_level){
             if((double)rand() / RAND_MAX <= 0.921){
                 Ex_Li = 0; //ground state energy
+                Gamma.p[0] = 0;
                 Jpp = 3./2.;
             }else{
                 Ex_Li = 0.47761; //exci((double)rand() / RAND_MAX)*decay_maxted state
+                Gamma.p[0] = Ex_Li; //gamma energy is the excitation energy
                 Jpp = 1./2.;
-                is_lithium_excited = true;
+                //is_lithium_excited = true;
             }
         }else{
             Ex_Li = 0; //ground state energy
@@ -104,12 +112,12 @@ int main(){
         //alpha particle
         m_Li -= me; //subtract off an electron from the Lithium mass
         a.p[0] = (m_B_11_ion*m_B_11_ion + m_alpha*m_alpha - m_Li*m_Li) / (2*m_B_11_ion);
-	    Li.p[0] =  -(m_B_11_ion*m_B_11_ion + m_alpha*m_alpha - m_Li*m_Li) / (2*m_B_11_ion);
 
         //recoil energy, gamma
-        if(is_lithium_excited){
-            double recoil = (m_Li*m_Li + (m_Li - Ex_Li)*(m_Li - Ex_Li))/(2*m_Li); //total energy of Li in rest frame of excited Li
-        }
+        // if(is_lithium_excited){
+        //     double recoil = ((m_Li)*(m_Li) + (m_Li - Ex_Li)*(m_Li - Ex_Li))/(2*m_Li) - (m_Li - Ex_Li); //total energy of Li in rest frame of excited Li
+        //     cout << recoil << endl;
+        // }
 
 
 	    a.momentumMag = sqrt(a.p[0]*a.p[0] - m_alpha*m_alpha); //all within the lab frame
@@ -123,7 +131,7 @@ int main(){
         //the momentum of Li is equal and opposite to the alpha particle
         Li.momentumMag = sqrt(Li.p[1]*Li.p[1] + Li.p[2]*Li.p[2] + Li.p[3]*Li.p[3]);
         //set_momentum_values(Li);
-        Li.p[0] = sqrt(Li.momentumMag*Li.momentumMag + m_Li*m_Li) - m_Li;
+        Li.kinetic_energy = sqrt(Li.momentumMag*Li.momentumMag + m_Li*m_Li) - m_Li;
 
 
         //transformation for the alpha particle
@@ -133,7 +141,7 @@ int main(){
 
         //setting the alpha momentum in the Be rest fram
         a.momentumMag = sqrt(a.p[1]*a.p[1] + a.p[2]*a.p[2] + a.p[3]*a.p[3]);
-        a.p[0] = sqrt(a.momentumMag*a.momentumMag + m_alpha*m_alpha) - m_alpha; //kinetic energy
+        a.kinetic_energy = sqrt(a.momentumMag*a.momentumMag + m_alpha*m_alpha) - m_alpha; //kinetic energy
 
         //normalize all of the values by the electron mass
         normalizeEnergy(e, v, a, m_norm);
@@ -150,11 +158,14 @@ int main(){
        	//rejection test for the decays2.36755
         if(rand_decay <= decay){
 
+            //increase the counter by one
+            ++counter;
+
 	        //unnormalize the inputs to the decay function
             unnormalizeEnergy(e, v, a, m_norm);
 
             //create the text files with raw data
-            output_text_files(Ex_B, Q, e, v, a);
+            output_text_files(Ex_B, Q, e, v, a, Li, Gamma, counter);
 
             //create output text files for decay
             output_decay_file(decay);
@@ -164,20 +175,3 @@ int main(){
     }
     return 0;
 }
-
-
-// ofstream alpha_Li("Alpha_Lithium.txt", ios_base::app);
-// alpha_Li << a.p[0] + Li.p[0] << endl;
-// alpha_Li.close();
-
-// ofstream Normalized_Dot_Product("Normalized_Dot_Product.txt", ios_base::app);
-// Normalized_Dot_Product << normalized_dotProduct(e,v) << endl;
-// Normalized_Dot_Product.close();
-
-// ofstream Term_2("Term_2.txt", ios_base::app);
-// Term_2 << term2 << endl;
-// Term_2.close();
-
-// ofstream total_kinetic("total_kinetic.txt", ios_base::app);
-// total_kinetic << a.p[0] + Li.p[0] + (e.p[0] - m_norm) + v.p[0] << endl;
-// total_kinetic.close();
