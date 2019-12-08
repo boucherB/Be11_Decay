@@ -30,25 +30,25 @@ int main(){
 
     int counter = 0; //counter used for the final output file
 
-    for(int i = 0; i < 1000000; ++i){ //9900000 events
+    for(int i = 0; i < 5600; ++i){ //9900000 events
 
         //initializing all of the masses and setting the spins
         double m_norm = 0.5109989461, me = m_norm, m_B_11 = 11.009305166,
-        m_Be_11 = 11.021661081, m_alpha = 4.00260325413, m_Li = 7.01600343666; //from AMDC
+        m_Be_11 = 11.021661081, m_alpha = 938.2720881629, m_Li = 10.013534695; //from AMDC
         double mass_conversion = 931.49410242; //Mev
-        double J = 1./2., Jp = 3./2., Jpp; //spins
+        double J = 1./2., Jp = 1./2., Jpp = 1./2.; //spins
 
         //convert the masses to MeV
         m_B_11 *= mass_conversion;
         m_Be_11 *= mass_conversion;
-        m_alpha *= mass_conversion;
+        //m_alpha *= mass_conversion; //already in MeV
         m_Li *= mass_conversion;
 
         //initialize all the particles
         particle e; //electron
         particle v; //neutrino
-        particle a; //alpha
-        particle Li; //Lithium
+        particle a; //proton
+        particle Li; //10Be
         particle B; //Boron
         particle Gamma; //Gamma
 
@@ -63,9 +63,10 @@ int main(){
 
         //extraction of excitation energy
         bool B_11_check = 1; //checks if this is for the exciation energy of Boron
-        string fileEx = "11Be_AlphaDecayFSD_2.dat"; //keV
-        double Ex_B = (data_Extraction_Value(fileEx, 285, B_11_check) / (1000)); //determines the excitation energy (MeV)
-        m_B_11 += Ex_B; //add the excitation energy to the ground state mass
+        //string fileEx = "11Be_AlphaDecayFSD_2.dat"; //keV
+        //double Ex_B = (data_Extraction_Value(fileEx, 285, B_11_check) / (1000)); //determines the excitation energy (MeV)
+        double Ex_B = generateGaussian(11.425,0.012); //MeV
+	m_B_11 += Ex_B; //add the excitation energy to the ground state mass
 
         //Q-value
         double Q = m_Be_11 - m_B_11; //Set the resulting Q-value
@@ -90,7 +91,7 @@ int main(){
 
         //excitation of Li
         double Ex_Li;
-        double excited_level = 9.142; //need to make sure the decay to excited is energetically possible
+        double excited_level =9999.142; //need to make sure the decay to excited is energetically possible
         //bool is_lithium_excited = false; //used this to verify the recoil of Li was small enough to ignore
         if(Ex_B >= excited_level){
             if((double)rand() / RAND_MAX <= 0.921){
@@ -150,7 +151,7 @@ int main(){
         double decay = decayEquation(e, v, a, J, Jp, Jpp);
 
         //setting the max decay value
-        double decay_max = 125.;
+        double decay_max = 0.015;
 
        	//random decay
         double rand_decay = ((double)rand() / RAND_MAX)*decay_max;
