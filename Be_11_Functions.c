@@ -125,11 +125,7 @@ double generateGaussian(double mu, double sigma){
 
     double z0 = sqrt(-2*log(u1))*sin(2*M_PI*u2); //Box-Muller transform
 
-    ofstream gaussian("Gaussian.txt", ios_base::app);
-    gaussian << z0 + sigma*mu << endl;
-    gaussian.close();
-
-    return z0 + sigma*mu;
+	return mu + sigma*z0;
 
 }
 
@@ -140,17 +136,17 @@ void output_text_files(double Ex_B, double Q, particle e, particle v, particle a
     Final_Output << "/gps/particle e-" << endl;
     Final_Output << "/gps/energy " << e.kinetic_energy << " MeV" << endl;
     Final_Output << "/gps/direction " << e.p[1] << " " << e.p[2] << " " << e.p[3] << endl;
-    Final_Output << "/gps/position " << "0 0 0 mm" << endl;
+    Final_Output << "/gps/position " << e.position[0] << " " << e.position[1] << " " << e.position[2] << " mm" << endl;
     Final_Output << "/run/beamOn 1" << endl;
     Final_Output << "/gps/particle He4" << endl;
     Final_Output << "/gps/energy " << a.kinetic_energy << " MeV" << endl;
     Final_Output << "/gps/direction " << a.p[1] << " " << a.p[2] << " " << a.p[3] << endl;
-    Final_Output << "/gps/position " << "0 0 0 mm" << endl;
+    Final_Output << "/gps/position " << a.position[0] << " " << a.position[1] << " " << a.position[2] << " mm" << endl;
     Final_Output << "/run/beamOn 1" << endl;
     Final_Output << "/gps/particle Li7" << endl;
     Final_Output << "/gps/energy " << Li.kinetic_energy << " MeV" << endl;
     Final_Output << "/gps/direction " << Li.p[1] << " " << Li.p[2] << " " << Li.p[3] << endl;
-    Final_Output << "/gps/position " << "0 0 0 mm" << endl;
+    Final_Output << "/gps/position " << Li.position[0] << " " << Li.position[1] << " " << Li.position[2] << " mm" << endl;
     Final_Output << "/run/beamOn 1" << endl;
 
     if(Gamma.p[0] > 0){

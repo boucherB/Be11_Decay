@@ -30,7 +30,7 @@ int main(){
 
     int counter = 0; //counter used for the final output file
 
-    for(int i = 0; i < 1000000; ++i){ //9900000 events
+    for(int i = 0; i < 23000000; ++i){ //9900000 events
 
         //initializing all of the masses and setting the spins
         double m_norm = 0.5109989461, me = m_norm, m_B_11 = 11.009305166,
