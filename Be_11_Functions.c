@@ -101,7 +101,7 @@ void unnormalizeEnergy(particle &e, particle &v, particle &a, double m_norm){
 
 void randomizePosition(particle &e, particle &a, particle &Li, particle &Gamma){
 
-    double FWHM = 2.0; //mm
+    double FWHM = 4.0; //mm
     double sigma = FWHM / 2.355; //approximately sigma
 
 

@@ -20,6 +20,8 @@ work on the readme
 #include "TH1D.h"
 #include "TCanvas.h"
 #include <TROOT.h>
+#include <TMVA/TSpline1.h>
+#include <TGraph.h>
 
 
 using namespace std;
@@ -30,12 +32,65 @@ int main(){
 
     int counter = 0; //counter used for the final output file
 
-    for(int i = 0; i < 23000000; ++i){ //9900000 events
+    //From this point to the beginning of the loop is to set up the maximum decay, otherwise it was favoring low excitation energies
+    //initializing all of the masses and setting the spins
+    double m_norm = 0.5109989461, me = m_norm, m_B_11 = 11.009305166,
+    m_Be_11 = 11.021661081, m_alpha = 4.00260325413, m_Li = 7.01600343666; //from AMDC
+    double mass_conversion = 931.49410242; //Mev
 
+    //convert the masses to MeV
+    m_B_11 *= mass_conversion;
+    m_Be_11 *= mass_conversion;
+    m_alpha *= mass_conversion;
+    m_Li *= mass_conversion;
+
+    particle electron; //dumby particle, which is the electron, to feed into the fermi function
+
+    //need to set up the maximum decay value
+    const int DIVISIONS = 500;
+    double EEx[DIVISIONS], decayMax[DIVISIONS];
+
+    for(int j = 0; j < DIVISIONS; ++j){
+
+        double dEx = (m_Be_11 - m_B_11) / double(DIVISIONS - 1) / 0.5109989; //need to run through this
+        EEx[j] = j*dEx;
+
+        double E0 = (m_Be_11 - m_B_11)/0.5109989 - EEx[j] + 1.;
+
+        double dEe = (E0 - 1.)/double(DIVISIONS - 1);
+        double Ee = 1.; //start electron energy at Te = 0
+
+        decayMax[j] = 0;
+
+        for(int i = 0; i < (DIVISIONS); ++i){
+
+            //set electron Energies
+
+            Ee += dEe;
+            electron.p[0] = Ee;
+            electron.maxEnergy = E0;
+            electron.momentumMag = sqrt(Ee*Ee - 1.);
+
+            double Ee_dist = fermi(electron)*(electron.maxEnergy - electron.p[0])*(electron.maxEnergy - electron.p[0])*(electron.p[0])*(electron.momentumMag);
+
+            if(Ee_dist > decayMax[j]){
+                decayMax[j] = Ee_dist; //We are creating an array by which we can apply a spline function
+            }
+        }
+    }
+
+    auto g = TGraph(DIVISIONS, EEx, decayMax);
+    auto s = TMVA::TSpline1("s", &g);
+
+
+    for(int i = 0; i < 100; ++i){ //9900000 events
+
+        cout << counter << endl;
+        //re-initialize everything
         //initializing all of the masses and setting the spins
-        double m_norm = 0.5109989461, me = m_norm, m_B_11 = 11.009305166,
+        m_norm = 0.5109989461, me = m_norm, m_B_11 = 11.009305166,
         m_Be_11 = 11.021661081, m_alpha = 4.00260325413, m_Li = 7.01600343666; //from AMDC
-        double mass_conversion = 931.49410242; //Mev
+        mass_conversion = 931.49410242; //Mev
         double J = 1./2., Jp = 3./2., Jpp; //spins
 
         //convert the masses to MeV
@@ -63,7 +118,7 @@ int main(){
 
         //extraction of excitation energy
         bool B_11_check = 1; //checks if this is for the exciation energy of Boron
-        string fileEx = "11Be_AlphaDecayFSD_2.dat"; //keV
+        string fileEx = "11Be_AlphaDecayFSD.dat"; //keV
         double Ex_B = (data_Extraction_Value(fileEx, 285, B_11_check) / (1000)); //determines the excitation energy (MeV)
         m_B_11 += Ex_B; //add the excitation energy to the ground state mass
 
@@ -150,10 +205,11 @@ int main(){
         double decay = decayEquation(e, v, a, J, Jp, Jpp);
 
         //setting the max decay value
-        double decay_max = 125.;
+        double decay_max = 1.;
+        //double decay_max = 2*s.Eval(Ex_B/0.5109989); //the decay maximum is a spline function
 
        	//random decay
-        double rand_decay = ((double)rand() / RAND_MAX)*decay_max;
+        double rand_decay = ((double)rand() / RAND_MAX)*decay_max; //what is the actual maximum
 
        	//rejection test for the decays2.36755
         if(rand_decay <= decay){

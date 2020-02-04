@@ -1,6 +1,6 @@
 OBJECTS = DecayFunctions.o Be_11_Spline.o Be_11_Main.o Be_11_Functions.o dataExtraction.o
 PREFLAGS = `root-config --cflags`
-POSTFLAGS = -fPIC `root-config --glibs`
+POSTFLAGS = -fPIC `root-config --glibs` -lTMVA
 
 all:clean Be_11
 
