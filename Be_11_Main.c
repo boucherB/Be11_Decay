@@ -83,9 +83,8 @@ int main(){
     auto s = TMVA::TSpline1("s", &g);
 
 
-    for(int i = 0; i < 100; ++i){ //9900000 events
+    for(int i = 0; i < 1000; ++i){ //9900000 events
 
-        cout << counter << endl;
         //re-initialize everything
         //initializing all of the masses and setting the spins
         m_norm = 0.5109989461, me = m_norm, m_B_11 = 11.009305166,
@@ -205,8 +204,8 @@ int main(){
         double decay = decayEquation(e, v, a, J, Jp, Jpp);
 
         //setting the max decay value
-        double decay_max = 1.;
-        //double decay_max = 2*s.Eval(Ex_B/0.5109989); //the decay maximum is a spline function
+        //double decay_max = 1.;
+        double decay_max = 2*s.Eval(Ex_B/0.5109989); //the decay maximum is a spline function
 
        	//random decay
         double rand_decay = ((double)rand() / RAND_MAX)*decay_max; //what is the actual maximum
